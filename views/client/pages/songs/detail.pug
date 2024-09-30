@@ -1,0 +1,39 @@
+extends ../../layouts/default.pug 
+include ../../mixins/box-head.pug
+
+block main 
+    .singer-detail
+        .container.my-3
+            .row
+                .col-12 
+                    .inner-pre-music 
+                        .inner-img  
+                            img(src=song.avatar, alt=song.title)
+                        .inner-info-music 
+                            .inner-text Bài hát
+                            .inner-title #{song.title}
+                            .inner-info 
+                                ul 
+                                    li 
+                                        img(src=singer.avatar, alt=singer.fullName)
+                                    li •
+                                    li(class="singer") #{singer.fullName}
+                                    li •
+                                    li(class="song") #{song.title}
+                                    li •
+                                    li 2019
+                                    li •
+                                    li #{topic.title}
+                                    li •
+                                    li #{song.like}
+                .col-12
+                    .inner-play
+                        .inner-avatar
+                            img(src=song.avatar)
+                        .inner-audio
+                            div(id="aplayer"
+                                song=song
+                                singer=singer)
+                    .inner-desc
+                        .inner-label Lyrics
+                        .inner-text !{song.lyrics}

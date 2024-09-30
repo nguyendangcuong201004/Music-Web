@@ -5,4 +5,6 @@ const route: Router = Router();
 
 route.get("/:slug", controller.list)
 
+route.get("/detail/:slug", controller.songDetail)
+
 export const songRoutes = route;

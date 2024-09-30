@@ -27,8 +27,34 @@ export const list = async (req: Request, res: Response): Promise<void> => {
     }
 
     res.render("client/pages/songs/list.pug", {
-        pageTitle: "Spotify - Web Player: Music for everyone",
+        pageTitle: `Nhạc ${topic.title}`,
         topic: topic,
         songs: songs
+    })
+}
+
+export const songDetail = async (req: Request, res: Response): Promise<void> => {
+    
+    const slug = req.params.slug;
+    const song = await Song.findOne({
+        slug: slug,
+        deleted: false,
+    })
+
+    const singer = await Singer.findOne({
+        _id: song.singerId,
+        deleted: false,
+    })
+
+    const topic = await Topic.findOne({
+        _id: song.topicId,
+        deleted: false,
+    })
+    
+    res.render("client/pages/songs/detail.pug", {
+        pageTitle: `${song.title} - ${singer.fullName}`,
+        song: song,
+        singer: singer,
+        topic: topic
     })
 }
