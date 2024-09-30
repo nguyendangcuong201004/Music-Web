@@ -7,31 +7,11 @@ block main
             .col-12.mb-4 
                 +box-head("Hãy cùng spotify thưởng thức âm nhạc!")
         .row
-            .col-3.mb-3
-                div(class="card")
-                    img(src="https://backend.daca.vn/assets/images/bolero.jpg")
-                    div(class="card-body")
-                        h5(class="card-title") Bolero
-                        p(class="card-text") Tổng hợp nhạc Bolero mới nhất
-                        a(href="/songs/:slugTopic" class="btn btn-primary") <i class="fa-solid fa-circle-play"></i>
-            .col-3.mb-3
-                div(class="card")
-                    img(src="https://backend.daca.vn/assets/images/remix.jpg")
-                    div(class="card-body")
-                        h5(class="card-title") Remix
-                        p(class="card-text") Tổng hợp nhạc Remix mới nhất
-                        a(href="/songs/:slugTopic" class="btn btn-primary") <i class="fa-solid fa-circle-play"></i>
-            .col-3.mb-3
-                div(class="card")
-                    img(src="https://backend.daca.vn/assets/images/hip-hop.jpg")
-                    div(class="card-body")
-                        h5(class="card-title") Hip-Hop
-                        p(class="card-text") Tổng hợp nhạc Hip-Hop mới nhất
-                        a(href="/songs/:slugTopic" class="btn btn-primary ") <i class="fa-solid fa-circle-play"></i>
-            .col-3.mb-3
-                div(class="card")
-                    img(src="https://backend.daca.vn/assets/images/latin.jpg")
-                    div(class="card-body")
-                        h5(class="card-title") Latin
-                        p(class="card-text") Tổng hợp nhạc Latin mới nhất
-                        a(href="/songs/:slugTopic" class="btn btn-primary") <i class="fa-solid fa-circle-play"></i>
+            each topic in topics
+                .col-3.mb-3
+                    div(class="card")
+                        img(src=`${topic.avatar}` atl=`${topic.title}`)
+                        div(class="card-body")
+                            h5(class="card-title") #{topic.title}
+                            p(class="card-text") #{topic.description}
+                            a(href=`/songs/${topic.slug}` class="btn btn-primary") <i class="fa-solid fa-circle-play"></i>

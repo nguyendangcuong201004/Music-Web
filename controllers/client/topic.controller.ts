@@ -9,6 +9,7 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     })
 
     res.render("client/pages/topics/index.pug", {
-        pageTitle: "Spotify - Web Player: Music for everyone"
+        pageTitle: "Spotify - Web Player: Music for everyone",
+        topics: topics
     })
 }
