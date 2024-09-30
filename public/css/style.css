@@ -1,0 +1,73 @@
+/* Header  */
+
+.header {
+    padding-top: 20px;
+}
+
+.header .inner-logo img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.header .inner-menu ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.header .inner-menu ul li {
+    margin-right: 30px;
+}
+
+
+.header .inner-menu ul li a {
+    text-decoration: none;
+    font-size: 20px;
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+/* Header  */
+
+/* Body  */
+
+body {
+    background-color: #121212; /* Màu nền tối */
+    color: #e0e0e0; /* Màu văn bản sáng */
+}
+
+/* Body  */
+
+
+/* Footer  */
+
+.footer .inner-policy ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.footer .inner-policy ul a {
+    text-decoration: none;
+    color: #e0e0e0;
+    font-size: 0.875rem;
+    opacity: 0.5;
+    font-weight: 450;
+}
+
+.footer .inner-copyright {
+    font-weight: 500;
+}
+
+.footer .inner-policy ul a:hover {
+    color: rgb(255, 255, 255);
+    opacity: 1;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Footer  */
