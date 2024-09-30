@@ -1,1 +1,1 @@
-console.log("OK")
+new WOW().init();
