@@ -178,7 +178,7 @@ body {
 
 .inner-pre-music .inner-img img{
     width: 200px;
-    height: 200px;
+    height: 100%;
     object-fit: cover;
     margin-right: 35px;
 }
@@ -239,6 +239,7 @@ body {
     animation-duration: 12s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+    animation-play-state: paused;
 }
 
 @keyframes spin {
@@ -262,6 +263,14 @@ body {
 
 .aplayer-music {
     color: #000;
+}
+
+.singer-detail .inner-pre-music .inner-info-music .inner-info [button-like] {
+    cursor: pointer;
+}
+
+.singer-detail .inner-pre-music .inner-info-music .inner-info [button-like].active {
+    color:#1ED760;
 }
 
 /* Aplayer */

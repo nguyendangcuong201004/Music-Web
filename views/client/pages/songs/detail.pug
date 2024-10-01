@@ -25,7 +25,8 @@ block main
                                     li •
                                     li #{topic.title}
                                     li •
-                                    li #{song.like}
+                                    li(button-like=song.id) <i class="fa-regular fa-heart" style="font-size: 14px"></i>
+                                    li(like-number=song.like) #{song.like}
                 .col-12
                     .inner-play
                         .inner-avatar

@@ -58,3 +58,32 @@ export const songDetail = async (req: Request, res: Response): Promise<void> => 
         topic: topic
     })
 }
+
+export const like = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.songId;
+    const status = req.params.status;
+
+    const song = await Song.findOne({
+        _id: id,
+        deleted: false,
+        status: "active",
+    })
+
+    let updateLike = song.like;
+    if (status == "like"){
+        updateLike += 1;
+    }
+    else updateLike -= 1;
+
+    await Song.updateOne({
+        _id: id
+    }, {
+        like: updateLike
+    })
+
+    res.json({
+        code: 200,
+        message: "Return after like song!",
+        like: updateLike
+    })
+}
