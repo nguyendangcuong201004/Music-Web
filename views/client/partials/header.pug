@@ -5,16 +5,28 @@ header.header
                 .inner-logo 
                     a(href="/topics")
                         img(src="/images/logo.png", alt="Logo Web")
+            .col-5 
+                .box-search 
+                    form(
+                        action="/search/result"
+                        method="GET"
+                    ) 
+                        div(class="form-group d-flex mb-0")
+                            input(
+                                type="text"
+                                placeholder="Bạn muốn phát nội dung gì?"
+                                class="form-control"
+                                name="keyword"
+                                value=keyword
+                            )
+                            button(
+                                type="submit"
+                            ) <i class="fa-solid fa-magnifying-glass"></i>
 
-            .col-9 
+            .col-4 
                 .inner-menu 
                     ul 
                         li 
                             a(href="/topics" class="home-button") <i class="fa-solid fa-house"></i>
-                        li
-                            .inner-search 
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                input(type="text" placeholder="Bạn muốn phát nội dung gì?")
-                                
                         li 
                             a(href="/songs/playlist") My Playlist

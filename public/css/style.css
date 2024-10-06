@@ -39,15 +39,14 @@
     border-radius: 50%;
 }
 
-.header .inner-menu .inner-search {
+.header .box-search {
     border-radius: 40px;
     padding: 10px;
     background-color: #1F1F1F;
-    display: flex;
     cursor: pointer;
 }
 
-.header .inner-menu .inner-search input {
+.header .box-search input {
     background-color: #1F1F1F;
     margin: 0;
     border: 0;
@@ -56,33 +55,43 @@
     color: #fff;
 }
 
-.header .inner-menu .inner-search .fa-magnifying-glass {
-    margin-right: 10px;
+.header .box-search button {
+    background-color: #1F1F1F;
+    border: none;
+    color: #fff;
     font-size: 24px;
     opacity: 0.7;
-} 
+    margin-left: 10px;
+}
 
-.header .inner-menu .inner-search:hover .fa-magnifying-glass {
+.header .box-search:hover button {
     opacity: 1;
     transition: all 0.2s ease-in-out;
+    background-color: #2A2A2A;
 } 
 
 
-.header .inner-menu .inner-search:hover {
+.header .box-search:hover {
     background-color: #2A2A2A;
     transition: all 0.2s ease-in-out;
 }
 
-.header .inner-menu .inner-search:hover input{
+.header .box-search:hover input{
     background-color: #2A2A2A;
     transition: all 0.2s ease-in-out;
 }
 
-.header .inner-menu .inner-search input:focus {
-    outline: none;
-    border: none;
+.header .box-search input:focus {
+    outline: none!important;
+    border: none!important;
+    box-shadow: none !important;
 }
 
+.header .box-search input:focus-visible {
+    outline: none!important;
+    border: none!important;
+    box-shadow: none !important;
+}
 /* Header  */
 
 /* Body  */
