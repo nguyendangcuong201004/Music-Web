@@ -64,3 +64,34 @@ if (buttonLike) {
 
 
 // Count tym
+
+// Favorite Song
+
+const buttonFavorite = document.querySelector("[button-favorite]");
+
+if (buttonFavorite){
+    buttonFavorite.addEventListener("click", () => {
+        const id = buttonFavorite.getAttribute("button-favorite");
+        const status = buttonFavorite.classList.contains("active") ? "unfavorite" : "favorite";
+
+        fetch(`/songs/favorite/${status}/${id}`, {
+            method: "PATCH"
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.code == 200){
+                    buttonFavorite.classList.toggle("active")
+                    const content = buttonFavorite.querySelector("span");
+
+                    if (data.message == "Đã thêm vào thư viện"){
+                        content.innerHTML = "Xóa khỏi Thư viện"
+                    }
+                    else {
+                        content.innerHTML = "Lưu vào thư viện"
+                    }
+                }
+            })
+    })
+}
+
+// Favorite Song 

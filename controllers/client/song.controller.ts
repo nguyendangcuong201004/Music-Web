@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Topic from "../../models/topic.model"
 import Song from "../../models/song.model";
 import Singer from "../../models/singer.mode";
+import FavoriteSong from "../../models/favorite-song.model";
 
 
 export const list = async (req: Request, res: Response): Promise<void> => {
@@ -50,6 +51,16 @@ export const songDetail = async (req: Request, res: Response): Promise<void> => 
         _id: song.topicId,
         deleted: false,
     })
+
+    const favoriteSong = await FavoriteSong.findOne({
+        songId: song.id,
+        deleted: false,
+    })
+    
+    if (favoriteSong){
+        song["favorite"] = true;
+    }
+    else song["favorite"] = false;
     
     res.render("client/pages/songs/detail.pug", {
         pageTitle: `${song.title} - ${singer.fullName}`,
@@ -86,4 +97,54 @@ export const like = async (req: Request, res: Response): Promise<void> => {
         message: "Return after like song!",
         like: updateLike
     })
+}
+
+export const favoritePatch =  async (req: Request, res: Response): Promise<void> => {
+    const status = req.params.status;
+    const id = req.params.songId;
+    
+    if (status == "favorite"){
+        const favoriteSong = new FavoriteSong({
+            userId: "",
+            songId: id,  
+        })
+        await favoriteSong.save();
+    }
+    else {
+        await FavoriteSong.deleteOne({
+            songId: id
+        });
+    }
+
+    res.json({
+        code: 200,
+        message: status == "favorite" ? "Đã thêm vào thư viện" : "Đã xóa khỏi thư viện"
+    })
+
+}
+
+export const playlist =  async (req: Request, res: Response): Promise<void> => {
+
+    const myPlaylist = await FavoriteSong.find({
+        deleted: false,
+    })
+
+    for (const item of myPlaylist) {
+        const song = await Song.findOne({
+            _id: item.songId,
+            deleted: false,
+        })
+        item["song"] = song;
+        const singer = await Singer.findOne({
+            _id: song.singerId,
+            deleted: false,
+        })
+        item["singer"] = singer;
+    }
+
+    res.render("client/pages/songs/favorite.pug", {
+        pageTitle: `My Playlist`,
+        myPlaylist: myPlaylist,
+    })
+
 }
