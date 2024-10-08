@@ -13,5 +13,7 @@ route.patch("/like/:status/:songId", controller.like)
 
 route.patch("/favorite/:status/:songId", controller.favoritePatch)
 
+route.patch("/listen/:songId", controller.listenPatch)
+
 
 export const songRoutes = route;

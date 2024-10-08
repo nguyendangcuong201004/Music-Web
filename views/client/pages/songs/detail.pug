@@ -27,6 +27,8 @@ block main
                                     li •
                                     li(button-like=song.id) <i class="fa-regular fa-heart" style="font-size: 14px"></i>
                                     li(like-number=song.like) #{song.like}
+                                    li •
+                                    li(class="inner-listen") <i class="fa-solid fa-headphones"></i> <span> #{song.listen} lượt nghe
                                     li(style="font-size: 35px" class=`love-song ${song.favorite == true ? "active" : ""}` button-favorite=song.id) 
                                         span #{song.favorite == true ? "Xóa khỏi Thư viện" : "Lưu vào Thư viện"}
                                         <i class="fa-brands fa-spotify"></i>

@@ -148,3 +148,29 @@ export const playlist =  async (req: Request, res: Response): Promise<void> => {
     })
 
 }
+
+export const listenPatch =  async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.songId;
+
+    const song = await Song.findOne({
+        _id: id,
+        status: "active",
+        deleted: false,
+    })
+
+    const listenUpdate = song.listen + 1;
+
+    await Song.updateOne({
+        _id: id,
+        status: "active",
+        deleted: false,
+    }, {
+        listen: listenUpdate
+    })
+
+    res.json({
+        code: 200,
+        message: "Đã cập nhật số stream",
+        listen: listenUpdate
+    })
+}

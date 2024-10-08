@@ -31,6 +31,20 @@ if (aplayer) {
         musicWheel.style.animationPlayState = "paused";
     });
 
+    ap.on('ended', function () {
+        fetch(`/songs/listen/${song._id}`, {
+            method: "PATCH"
+        })
+            .then(res => res.json())
+            .then((data) => {
+                if (data.code == 200){
+                    const Innerlisten = document.querySelector(".singer-detail .inner-info .inner-listen");
+                    const listenValue = Innerlisten.querySelector("span");
+                    listenValue.innerHTML = `${data.listen} lượt nghe`
+                }
+            })
+    });
+
 }
 // Aplayer
 
