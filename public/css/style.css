@@ -5,6 +5,10 @@
 
 .header {
     padding-top: 20px;
+    position: sticky;
+    z-index: 999;
+    top: 0px;
+    background-color: #121212;
 }
 
 .header .inner-logo img {
@@ -39,11 +43,19 @@
     border-radius: 50%;
 }
 
+.header .col-5 {
+    position: relative;
+}
+
 .header .box-search {
     border-radius: 40px;
     padding: 10px;
     background-color: #1F1F1F;
     cursor: pointer;
+    /* position: relative; */
+    position: absolute;
+    top: -35px;
+    z-index: 1;
 }
 
 .header .box-search input {
@@ -92,6 +104,50 @@
     border: none!important;
     box-shadow: none !important;
 }
+
+.header .box-search .inner-suggest.show .inner-list a {
+    text-decoration: none;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.header .box-search .inner-suggest.show  .inner-list .inner-item {
+    display: flex;
+    border-radius: 5px;
+    margin: 10px;
+    cursor: pointer;
+    
+}
+
+.header .box-search .inner-suggest.show  .inner-list .inner-item:hover {
+    background-color: #121212;
+    transition: all 0.2s ease-in-out;
+}
+
+.header .box-search .inner-suggest {
+    display: none;
+}
+
+.header .box-search .inner-suggest.show {
+    display: block
+} 
+
+.header .box-search .inner-suggest.show  .inner-list a .inner-image img{
+    width: 80px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.header .box-search .inner-suggest.show  .inner-list a .inner-title {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.header .box-search .inner-suggest.show  .inner-list a .inner-singer {
+    color: #e0e0e0;
+}
+
 /* Header  */
 
 /* Body  */

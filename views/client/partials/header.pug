@@ -6,7 +6,7 @@ header.header
                     a(href="/topics")
                         img(src="/images/logo.png", alt="Logo Web")
             .col-5 
-                .box-search 
+                div(class="box-search")
                     form(
                         action="/search/result"
                         method="GET"
@@ -22,6 +22,9 @@ header.header
                             button(
                                 type="submit"
                             ) <i class="fa-solid fa-magnifying-glass"></i>
+                    .inner-suggest
+                        .inner-list     
+
 
             .col-4 
                 .inner-menu 
