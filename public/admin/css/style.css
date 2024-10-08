@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+
+
+body {
+    background-color: #121212; /* Màu nền tối */
+    color: #fff;
+}
+
+/* Header  */
+
+.header {
+    background-color: #000000;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.header .inner-logo a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+
+.header .inner-logo a span{
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.header .inner-logo a img {
+    width: 70px;
+    margin-right: 10px;
+}
+
+.header .text-right .button-account{
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.header .text-right .button-logout{
+    background-color: #FFFFFF;
+    color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+/* Header  */
+
+
+/* Sider  */
+
+.body .sider {
+    width: 180px;
+    background: #000000;
+    color: #fff;
+    height: calc(100vh - 56px);
+    position: fixed;
+    top: 100px;
+    left: 0;
+}
+
+.body .main{
+    margin: 15px;
+    position: relative;
+    left: 185px;
+    width: calc(100% - 200px);
+}
+
+.sider .inner-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0  0 0 12px;
+}
+
+.sider .inner-menu ul li a {
+    color: #fff;
+    display: inline-block;
+    padding: 6px 10px;
+    border-bottom: 1px solid #515151;
+    text-decoration: none;
+}
+
+/* Sider  */
