@@ -8,17 +8,25 @@ import clientRoutes from "./routes/client";
 import adminRoutes from "./routes/admin";
 import { systemConfig } from "./config/system";
 import path from "path";
+import methodOverride from "method-override";
+import bodyParser from "body-parser";
 
 const app: Express = express();
 const port: (number | string) = `${process.env.PORT}` || 3000;
 
+
+
 app.set('views', './views')
 app.set('view engine', 'pug')
 
-app.use(express.static("public"));
-
 app.use("/tinymce", express.static(path.join(__dirname, "node_modules", "tinymce")
 ))
+
+app.use(express.static(`${__dirname}/public`));
+app.use(methodOverride('_method'))
+app.use(bodyParser.urlencoded({ extended: false }))
+
+
 
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 

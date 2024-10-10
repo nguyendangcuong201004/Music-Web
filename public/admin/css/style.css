@@ -93,3 +93,92 @@ body {
 }
 
 /* Sider  */
+
+
+/* Main  */
+
+.card {
+    color: #fff;
+    background-color: #121212;
+    border: 1px solid #ddd;
+}
+
+.card .card-header {
+    border: 1px solid #ddd;
+}
+
+.card .card-body .button-add{
+    color: #000;
+    border: 1px solid #fff;
+    background-color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 10px;
+}
+
+.card .card-body .button-add:hover {
+    background-color: #ddd;
+    transition: all 0.2s ease-in-out;
+}
+
+.card .card-body table {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.card .card-body table tr:hover {
+    color: #fff;
+}
+
+.card .card-body table .button-action {
+    text-decoration: none;
+    background-color: #FFFFFF;
+    color: #000;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    margin-top: 100px;
+}
+
+.card .card-body table .list-button {
+    padding-top: 15px;
+}
+
+/* Main  */
+
+/* Detail-Topic */
+
+.topic-detail .inner-pre-detail {
+    display: flex;
+
+}
+
+.topic-detail .inner-pre-detail img {
+    width: 350px;
+    margin-right: 30px;
+}
+
+.topic-detail .inner-pre-detail .inner-info-music .inner-text{
+    font-size: 40px;
+    font-family: "Alfa Slab One", serif;
+}
+
+/* Detail-Topic */
+
+/* image-preview */
+.image-preview {
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    overflow: hidden;
+}
+.image-preview[src=""]{
+    display: none;
+}
+/* image-preview */
