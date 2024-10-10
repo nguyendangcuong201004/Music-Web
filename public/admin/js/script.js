@@ -1,4 +1,4 @@
-// Button change status
+// Button change status Topic
 
 const listButtonChangeStatus = document.querySelectorAll("[button-change-status]");
 if (listButtonChangeStatus.length > 0){
@@ -10,6 +10,25 @@ if (listButtonChangeStatus.length > 0){
 
             const path = formChangeStatus.getAttribute("data-path");
             const action = path + `/${status}/${topicId}?_method=PATCH`;
+
+            formChangeStatus.action = action;
+
+            formChangeStatus.submit();
+        })
+    })
+}
+
+// Button change Songs  
+
+if (listButtonChangeStatus){
+    const formChangeStatus = document.querySelector("[form-change-status ]")
+    listButtonChangeStatus.forEach((button) => {
+        button.addEventListener("click", () => {
+            const songId = button.getAttribute("data-id");
+            const status = button.getAttribute("data-status");
+
+            const path = formChangeStatus.getAttribute("data-path");
+            const action = path + `/${status}/${songId}?_method=PATCH`;
 
             formChangeStatus.action = action;
 
@@ -53,3 +72,4 @@ if (closeAlert){
         showAlert.classList.add("alert-hidden")
     })
 }
+

@@ -1,0 +1,46 @@
+extends ../../../client/layouts/default.pug
+include ../../../client/mixins/box-head.pug
+
+block main 
+    .singer-detail
+        .container.my-3
+            .row
+                .col-12 
+                    .inner-pre-music 
+                        .inner-img  
+                            img(src=song.avatar, alt=song.title)
+                        .inner-info-music 
+                            .inner-text Bài hát
+                            .inner-title #{song.title}
+                            .inner-info 
+                                ul 
+                                    li 
+                                        img(src=singer.avatar, alt=singer.fullName)
+                                    li •
+                                    li(class="singer") #{singer.fullName}
+                                    li •
+                                    li(class="song") #{song.title}
+                                    li •
+                                    li 2019
+                                    li •
+                                    li #{topic.title}
+                                    li •
+                                    li(button-like=song.id) <i class="fa-regular fa-heart" style="font-size: 14px"></i>
+                                    li(like-number=song.like) #{song.like}
+                                    li •
+                                    li(class="inner-listen") <i class="fa-solid fa-headphones"></i> <span> #{song.listen} lượt nghe
+                                    li(style="font-size: 35px" class=`love-song ${song.favorite == true ? "active" : ""}` button-favorite=song.id) 
+                                        span #{song.favorite == true ? "Xóa khỏi Thư viện" : "Lưu vào Thư viện"}
+                                        <i class="fa-brands fa-spotify"></i>
+
+                .col-12
+                    .inner-play
+                        .inner-avatar
+                            img(src=song.avatar)
+                        .inner-audio
+                            div(id="aplayer"
+                                song=song
+                                singer=singer)
+                    .inner-desc
+                        .inner-label Lyrics
+                        .inner-text !{song.lyrics}

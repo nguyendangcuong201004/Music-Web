@@ -3,6 +3,7 @@ import { dashboardRoutes } from "./dashboard.route";
 import { systemConfig } from "../../config/system";
 import { topicRoutes } from "./topic.route";
 import { roleRoutes } from "./role.route";
+import { songRoutes } from "./song.route"
 
 const adminRoutes = (app: Express): void => {
 
@@ -13,6 +14,8 @@ const adminRoutes = (app: Express): void => {
     app.use(`/${path}/topics`, topicRoutes)
 
     app.use(`/${path}/roles`, roleRoutes);
+
+    app.use(`/${path}/songs`, songRoutes);
 }
 
 export default adminRoutes
