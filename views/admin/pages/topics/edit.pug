@@ -3,14 +3,12 @@ include ../../mixins/alert.pug
 
 block main  
 
-
     +alert-success()
 
     h1(class="mb-4") Spotify's Topics
 
     form(
-        action=`/${prefixAdmin}/topics/create`
-        id="form-create-topic"
+        action=`/${prefixAdmin}/topics/edit/${topic.id}?_method=PATCH`
         method="POST"
         enctype="multipart/form-data"
     )
@@ -21,6 +19,7 @@ block main
                 class="form-control"
                 id="title"
                 name="title"
+                value=topic.title
                 required 
             )
         div(class="form-group")
@@ -31,7 +30,7 @@ block main
                 name="description"
                 rows="5"
                 textarea-mce
-            )
+            ) !{topic.description.trim()}
         div(
             class="form-group"
             upload-image
@@ -46,7 +45,7 @@ block main
                 upload-image-input
             ) 
             img(
-                src=""
+                src=topic.avatar
                 upload-image-preview
                 class="image-preview"
             )
@@ -58,7 +57,7 @@ block main
                 id="statusActive"
                 name="status"
                 value="active"
-                checked 
+                checked = true ? topic.status=="active" : false
             )
             label(for="statusActive" class="form-check-label") Hoạt động 
         div(class="form-group form-check form-check-inline")
@@ -68,10 +67,11 @@ block main
                 id="statusInActive"
                 name="status"
                 value="inactive"
+                checked = true ? topic.status=="inactive" : false
             )
             label(for="statusInActive" class="form-check-label") Dừng Hoạt động 
         div(class="form-group")
             button(
                 type="submit"
                 class="btn btn-primary"
-            ) Tạo mới 
+            ) Cập nhật

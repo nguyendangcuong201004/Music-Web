@@ -61,6 +61,55 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
 
     const topic = new Topic(topicObject);
     await topic.save()
+
+
+    req.flash('success', `Spotify đã thêm ${topicObject.title} thành công!`);
+    res.redirect("back")
+}
+
+export const edit = async (req: Request, res: Response): Promise<void> => {
+    const topicId = req.params.topicId;
     
+    const topic = await Topic.findOne({
+        _id: topicId,
+        deleted: false,
+    })
+    res.render("admin/pages/topics/edit.pug", {
+        pageTitle: `Spotify's Topics`,
+        topic: topic
+    })
+}
+
+export const editPatch = async (req: Request, res: Response): Promise<void> => {
+    
+    const topicId = req.params.topicId;
+    console.log(topicId)
+
+    const topicObject = {
+        title: req.body.title,
+        description: req.body.description,
+        status: req.body.status,
+        avatar: req.body.thumbnail
+    }
+
+    await Topic.updateOne({
+        _id: topicId,
+    }, topicObject)
+
+    req.flash('success', `Spotify đã cập nhật thành công!`);
+    res.redirect("back")
+}
+
+
+export const deleteTopic = async (req: Request, res: Response): Promise<void> => {
+
+    const topicId = req.params.topicId;
+
+    await Topic.deleteOne({
+        _id: topicId
+    })
+
+    req.flash('success', `Spotify đã xóa thành công!`);    
+
     res.redirect("back")
 }

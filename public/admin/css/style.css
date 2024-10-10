@@ -182,3 +182,40 @@ body {
     display: none;
 }
 /* image-preview */
+
+
+/* show alert */
+[show-alert] {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999;
+    background-color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+
+[show-alert] .fa-spotify {
+    color: #1ED760;
+    font-size: 30px;
+    margin-right: 5px;    
+}
+
+[show-alert].alert-hidden {
+    animation-name: alert-hidden;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+}
+@keyframes alert-hidden {
+    from {
+        right: 15px;
+    }
+    to {
+        right: -100%;
+        display: none;
+    }
+}
+/* show alert */

@@ -1,7 +1,6 @@
 import { Router } from "express"
 import * as controller from "../../controllers/admin/topic.controller"
 import multer from "multer";
-import { storage } from "../../helpers/storage.helper";
 import { uploadSingle } from "../../middlewares/admin/uploadCloud.middleware";
 
 const route: Router = Router();
@@ -17,5 +16,11 @@ route.get("/detail/:topicId",controller.detail)
 route.get("/create",controller.create)
 
 route.post("/create", upload.single('thumbnail'), uploadSingle, controller.createPost)
+
+route.get("/edit/:topicId", controller.edit)
+
+route.patch("/edit/:topicId", upload.single('thumbnail'), uploadSingle, controller.editPatch)
+
+route.get("/delete/:topicId", controller.deleteTopic)
 
 export const topicRoutes = route;

@@ -1,7 +1,9 @@
 extends ../../layouts/default.pug 
-
+include ../../mixins/alert.pug
 
 block main
+
+    +alert-success()
     h1(class="mb-4") Spotify's Topics
 
     .card.mb-3 
@@ -67,7 +69,7 @@ block main
                                 a(
                                     class="button-action"
                                     button-delete
-                                    data-id=item.id
+                                    href=`/${prefixAdmin}/topics/delete/${item.id}`
                                 ) Xóa
         
     form(
