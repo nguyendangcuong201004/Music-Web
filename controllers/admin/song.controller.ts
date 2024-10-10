@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import Song from "../../models/song.model"
 import Singer from "../../models/singer.mode"
 import Topic from "../../models/topic.model"
+import { systemConfig } from "../../config/system"
 
 
 export const index = async (req: Request, res: Response): Promise<void> => {
@@ -84,4 +85,32 @@ export const deleteSong = async (req: Request, res: Response): Promise<void> => 
 
     req.flash("success", `Spotify đã xóa ${song.title} thành công!`)
     res.redirect("back")
+}
+
+
+export const create = async (req: Request, res: Response): Promise<void> => {
+    const topics = await Topic.find({
+        deleted: false
+    })
+
+    const singers = await Singer.find({
+        deleted: false,
+    })
+
+    res.render("admin/pages/songs/create.pug", {
+        pageTitle: "Spotify Upload",
+        topics: topics,
+        singers: singers
+    })
+}
+
+
+export const createPost = async (req: Request, res: Response): Promise<void> => {
+
+    console.log(req.body)
+
+    const song = new Song(req.body);
+    await song.save();
+
+    res.redirect(`/${systemConfig.prefixAdmin}/songs`)
 }
