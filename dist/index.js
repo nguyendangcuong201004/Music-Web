@@ -19,7 +19,7 @@ var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var express_session_1 = __importDefault(require("express-session"));
 var app = (0, express_1.default)();
 var port = "".concat(process.env.PORT) || 3000;
-app.set('views', './views');
+app.set('views', "".concat(__dirname, "/views"));
 app.set('view engine', 'pug');
 app.use((0, cookie_parser_1.default)('NDCNDTN'));
 app.use((0, express_session_1.default)({ cookie: { maxAge: 60000 } }));
