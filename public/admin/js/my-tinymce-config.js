@@ -4,6 +4,7 @@ tinymce.init({
     image_title: true,
     automatic_uploads: true,
     file_picker_types: 'image',
+    images_upload_url: "/admin/upload",
     file_picker_callback: function (cb, value, meta) {
       var input = document.createElement('input');
       input.setAttribute('type', 'file');
@@ -27,3 +28,5 @@ tinymce.init({
     },
 
   });
+
+

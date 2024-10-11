@@ -4,6 +4,7 @@ import { systemConfig } from "../../config/system";
 import { topicRoutes } from "./topic.route";
 import { roleRoutes } from "./role.route";
 import { songRoutes } from "./song.route"
+import { uploadRoutes } from "./upload.route";
 
 const adminRoutes = (app: Express): void => {
 
@@ -16,6 +17,8 @@ const adminRoutes = (app: Express): void => {
     app.use(`/${path}/roles`, roleRoutes);
 
     app.use(`/${path}/songs`, songRoutes);
+
+    app.use(`/${path}/upload`, uploadRoutes);
 }
 
 export default adminRoutes
