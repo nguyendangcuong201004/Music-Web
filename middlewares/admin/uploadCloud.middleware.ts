@@ -1,41 +1,30 @@
-import { v2 as cloudinary } from 'cloudinary';
-import streamifier from "streamifier"
-import dotenv from "dotenv"
-dotenv.config();
+import { uploadToCloudiary } from "../../helpers/uploadToCloudiary.helper";
+import { Request, Response, NextFunction } from "express";
 
-cloudinary.config({ 
-    cloud_name: process.env.CLOUD_NAME, 
-    api_key: process.env.CLOUD_KEY, 
-    api_secret: process.env.CLOUD_SECRET, 
-});
+export const uploadSingle = async (req: Request, res: Response, next:NextFunction): Promise<void> => {
+  if (req["file"]) {
+    const link = await uploadToCloudiary(req["file"].buffer);
+    req.body[req["file"].fieldname] = link;
+    next();
+  }
+  else {
+    next();
+  }
+}
 
-export const uploadSingle = (req, res, next) => {
-    if (req.file){
-        let streamUpload = (req) => {
-            return new Promise((resolve, reject) => {
-                let stream = cloudinary.uploader.upload_stream(
-                  (error, result) => {
-                    if (result) {
-                      resolve(result);
-                    } else {
-                      reject(error);
-                    }
-                  }
-                );
-    
-              streamifier.createReadStream(req.file.buffer).pipe(stream);
-            });
-        };
-    
-        const upload = async(req) => {
-            let result = await streamUpload(req);
-            req.body[req.file.fieldname] = (result as any).url;
-            next();
-        }
-    
-        upload(req);
+export const uploadFields = async (req: Request, res: Response, next:NextFunction): Promise<void> => {
+  if (req["files"]) {
+    for (const key in req["files"]) {
+      const links = [];
+      for (const element of req["files"][key]) {
+        const link = await uploadToCloudiary(element.buffer);
+        links.push(link)
+      }
+      req.body[key] = links
     }
-    else {
-        next();
-    }
+    next();
+  }
+  else {
+    next();
+  }
 }

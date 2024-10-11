@@ -107,7 +107,13 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
 
-    console.log(req.body)
+    if (req.body.avatar){
+        req.body.avatar = req.body.avatar[0];
+    }
+
+    if (req.body.audio){
+        req.body.audio = req.body.audio[0];
+    }
 
     const song = new Song(req.body);
     await song.save();

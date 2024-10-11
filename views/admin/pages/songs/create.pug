@@ -49,7 +49,7 @@ block main
                 class="form-control-file"
                 id="avatar"
                 name="avatar"
-                accept="image/**"
+                accept="image/*"
                 upload-image-input
             )
             img(
@@ -57,6 +57,15 @@ block main
                 class="image-preview"
                 upload-image-preview
             )
+        div(class="form-group")
+            label(for="audio") Audio 
+            input(
+                type="file"
+                class="form-control-file"
+                id="audio"
+                name="audio"
+                accept="audio/*"
+            ) 
         div(class="form-group")
             label(for="desc") Thông tin bài hát 
             textarea(
