@@ -57,7 +57,7 @@ block main
                 class="image-preview"
                 upload-image-preview
             )
-        div(class="form-group")
+        div(class="form-group" upload-audio)
             label(for="audio") Audio 
             input(
                 type="file"
@@ -65,6 +65,12 @@ block main
                 id="audio"
                 name="audio"
                 accept="audio/*"
+                upload-audio-input
+            ) 
+            audio(
+                src=""
+                controls 
+                upload-audio-play
             ) 
         div(class="form-group")
             label(for="desc") Thông tin bài hát 
