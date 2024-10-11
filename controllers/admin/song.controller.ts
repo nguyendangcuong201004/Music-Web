@@ -120,3 +120,65 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
 
     res.redirect(`/${systemConfig.prefixAdmin}/songs`)
 }
+
+export const edit = async (req: Request, res: Response): Promise<void> => {
+    const songId = req.params.songId;
+
+    const song = await Song.findOne({
+        _id: songId,
+        deleted: false,
+    })
+
+    const topicOfSong = await Topic.findOne({
+        _id: song.topicId,
+        deleted: false,
+    })
+
+    const singerOfSong = await Singer.findOne({
+        _id: song.singerId,
+        deleted: false,
+    })
+
+    const topics = await Topic.find({
+        deleted: false
+    })
+
+    const singers = await Singer.find({
+        deleted: false,
+    })
+
+    res.render("admin/pages/songs/edit.pug", {
+        pageTitle: "Spotify Update",
+        topicOfSong: topicOfSong,
+        singerOfSong: singerOfSong,
+        song: song,
+        topics: topics,
+        singers: singers,
+    })
+}
+
+export const editPatch = async (req: Request, res: Response): Promise<void> => {
+    const songId = req.params.songId;
+
+    if (req.body.avatar){
+        req.body.avatar = req.body.avatar[0]
+    }
+
+    if (req.body.audio){
+        req.body.audio = req.body.audio[0];
+    }
+
+    const song = await Song.findOne({
+        _id: songId,
+        deleted: false,
+    })
+
+    await Song.updateOne({
+        _id: songId,
+        deleted: false,
+    }, req.body)
+
+    req.flash("success", `Spotify đã cập nhật ${song.title} thành công!`)
+
+    res.redirect(`/${systemConfig.prefixAdmin}/songs`)
+}

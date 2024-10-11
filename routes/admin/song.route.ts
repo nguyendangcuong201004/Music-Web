@@ -19,4 +19,8 @@ route.get("/create", controller.create)
 
 route.post("/create", upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'audio', maxCount: 1 }]), uploadFields, controller.createPost)
 
+route.get("/edit/:songId", controller.edit);
+
+route.patch("/edit/:songId", upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'audio', maxCount: 1 }]), uploadFields, controller.editPatch);
+
 export const songRoutes = route;
