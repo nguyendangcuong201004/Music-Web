@@ -1,0 +1,18 @@
+header.header 
+    .container-fluid
+        .row.align-items-center 
+            .col-3 
+                .inner-logo 
+                    a(href=`/${prefixAdmin}/dashboard`)
+                        img(src="/admin/images/logo.png", alt="")
+                        span  SPOTIFY 
+            .col-9 
+                div(class="text-right")
+                    a(
+                        href=`/${prefixAdmin}/my-account`
+                        class="button-account"
+                    ) Nguyen Dang Cuong
+                    a(
+                        href=`/${prefixAdmin}/auth/logout`
+                        class="button-logout"
+                    ) Đăng xuất 
