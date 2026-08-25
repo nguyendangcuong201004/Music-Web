@@ -16,13 +16,21 @@ block main
     h1(class="mb-4") Phân quyền
     +alert-success()
 
+    - const canEditPermissions = role && role.permissions && role.permissions.includes("roles_permissions")
+
     if(records && records.length > 0)
-        div(class="text-right")
-            button(
-                type="button"
-                class="btn btn-primary mb-3"
-                button-submit-permissions
-            ) Cập nhật
+        if(canEditPermissions)
+            div(class="text-right")
+                button(
+                    type="button"
+                    class="btn btn-primary mb-3"
+                    button-submit-permissions
+                ) Cập nhật
+        else
+            div(class="alert alert-info")
+                | Bạn chỉ có thể xem phân quyền. Chỉ 
+                b Quản trị viên cao nhất
+                |  mới có thể chỉnh sửa.
         table(class="table table-hover table-sm" table-permissions)
             thead
                 tr
@@ -39,9 +47,9 @@ block main
                 tr(data-name="view")
                     td(colspan=(records.length + 1))
                         b Quyền xem
-                +permission-row("topics_view", "Quản lý chủ đề")
-                +permission-row("songs_view", "Quản lý bài hát")
-                +permission-row("singers_view", "Quản lý ca sĩ")
+                +permission-row("topics_view", "Chủ đề")
+                +permission-row("songs_view", "Bài hát")
+                +permission-row("singers_view", "Ca sĩ")
                 +permission-row("roles_view", "Nhóm quyền")
                 +permission-row("accounts_view", "Tài khoản admin")
                 +permission-row("settings_view", "Cài đặt chung")
@@ -49,29 +57,30 @@ block main
                 tr(data-name="create")
                     td(colspan=(records.length + 1))
                         b Quyền thêm mới
-                +permission-row("topics_create", "Quản lý chủ đề")
-                +permission-row("songs_create", "Quản lý bài hát")
-                +permission-row("singers_create", "Quản lý ca sĩ")
+                +permission-row("topics_create", "Chủ đề")
+                +permission-row("songs_create", "Bài hát")
+                +permission-row("singers_create", "Ca sĩ")
                 +permission-row("roles_create", "Nhóm quyền")
                 +permission-row("accounts_create", "Tài khoản admin")
 
                 tr(data-name="edit")
                     td(colspan=(records.length + 1))
                         b Quyền chỉnh sửa
-                +permission-row("topics_edit", "Quản lý chủ đề")
-                +permission-row("songs_edit", "Quản lý bài hát")
-                +permission-row("singers_edit", "Quản lý ca sĩ")
+                +permission-row("topics_edit", "Chủ đề")
+                +permission-row("songs_edit", "Bài hát")
+                +permission-row("singers_edit", "Ca sĩ")
                 +permission-row("roles_edit", "Nhóm quyền")
-                +permission-row("roles_permissions", "Phân quyền")
+                if(canEditPermissions)
+                    +permission-row("roles_permissions", "Phân quyền")
                 +permission-row("accounts_edit", "Tài khoản admin")
                 +permission-row("settings_edit", "Cài đặt chung")
 
                 tr(data-name="delete")
                     td(colspan=(records.length + 1))
                         b Quyền xóa
-                +permission-row("topics_delete", "Quản lý chủ đề")
-                +permission-row("songs_delete", "Quản lý bài hát")
-                +permission-row("singers_delete", "Quản lý ca sĩ")
+                +permission-row("topics_delete", "Chủ đề")
+                +permission-row("songs_delete", "Bài hát")
+                +permission-row("singers_delete", "Ca sĩ")
                 +permission-row("roles_delete", "Nhóm quyền")
                 +permission-row("accounts_delete", "Tài khoản admin")
 

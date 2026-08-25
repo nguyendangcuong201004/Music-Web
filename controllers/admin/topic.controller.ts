@@ -4,7 +4,12 @@ import Song from "../../models/song.model"
 import { checkPermission, notPermission } from "../../middlewares/admin/auth.middleware"
 
 export const index = async (req: Request, res: Response): Promise<void> => {
-    
+
+    if (!checkPermission(res, "topics_view")) {
+        notPermission(res);
+        return;
+    }
+
     const topics = await Topic.find({
         deleted: false,
     })

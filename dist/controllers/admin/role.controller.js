@@ -48,9 +48,14 @@ var index = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
     var records, _i, records_1, record, countAccount, creator;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, role_model_1.default.find({
-                    deleted: false,
-                })];
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "roles_view")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, role_model_1.default.find({
+                        deleted: false,
+                    })];
             case 1:
                 records = _a.sent();
                 _i = 0, records_1 = records;
@@ -225,14 +230,9 @@ var permissions = function (req, res) { return __awaiter(void 0, void 0, void 0,
     var records;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                if (!(0, auth_middleware_1.checkPermission)(res, "roles_permissions")) {
-                    (0, auth_middleware_1.notPermission)(res);
-                    return [2 /*return*/];
-                }
-                return [4 /*yield*/, role_model_1.default.find({
-                        deleted: false,
-                    })];
+            case 0: return [4 /*yield*/, role_model_1.default.find({
+                    deleted: false,
+                })];
             case 1:
                 records = _a.sent();
                 res.render("admin/pages/roles/permissions.pug", {

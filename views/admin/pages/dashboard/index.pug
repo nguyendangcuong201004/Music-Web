@@ -1,5 +1,60 @@
-extends ../../layouts/default.pug 
-
+extends ../../layouts/default.pug
 
 block main
-    h1 Nguyen Dang Cuong
+    .welcome-section
+        h2(class="welcome-title") Xin chào, #{user.fullName}!
+        p(class="welcome-subtitle") Chào mừng bạn quay trở lại hệ thống quản lý Spotify.
+
+    h5(class="section-title") Tổng quan hệ thống
+    .stat-grid
+        a(href=`/${prefixAdmin}/songs` class="stat-card")
+            .stat-icon.stat-icon-green
+                i(class="fa-solid fa-music")
+            .stat-info
+                .stat-value #{statistic.countSong}
+                .stat-label Bài hát
+        a(href=`/${prefixAdmin}/topics` class="stat-card")
+            .stat-icon.stat-icon-blue
+                i(class="fa-solid fa-radio")
+            .stat-info
+                .stat-value #{statistic.countTopic}
+                .stat-label Chủ đề
+        a(href=`/${prefixAdmin}/singers` class="stat-card")
+            .stat-icon.stat-icon-orange
+                i(class="fa-solid fa-headphones")
+            .stat-info
+                .stat-value #{statistic.countSinger}
+                .stat-label Ca sĩ
+        a(href=`/${prefixAdmin}/accounts` class="stat-card")
+            .stat-icon.stat-icon-purple
+                i(class="fa-solid fa-user-tie")
+            .stat-info
+                .stat-value #{statistic.countAccount}
+                .stat-label Tài khoản admin
+        a(href=`/${prefixAdmin}/users` class="stat-card")
+            .stat-icon.stat-icon-cyan
+                i(class="fa-solid fa-user")
+            .stat-info
+                .stat-value #{statistic.countUser}
+                .stat-label Tài khoản user
+        a(href=`/${prefixAdmin}/songs/playlist` class="stat-card")
+            .stat-icon.stat-icon-pink
+                i(class="fa-solid fa-heart")
+            .stat-info
+                .stat-value #{statistic.countFavorite}
+                .stat-label Lượt yêu thích
+
+    h5(class="section-title mt-4") Quản trị nhanh
+    .quick-grid
+        a(href=`/${prefixAdmin}/topics/create` class="quick-card")
+            i(class="fa-solid fa-plus")
+            span Thêm chủ đề
+        a(href=`/${prefixAdmin}/singers/create` class="quick-card")
+            i(class="fa-solid fa-plus")
+            span Thêm ca sĩ
+        a(href=`/${prefixAdmin}/songs/create` class="quick-card")
+            i(class="fa-solid fa-upload")
+            span Đăng tải bài hát
+        a(href=`/${prefixAdmin}/roles/permissions` class="quick-card")
+            i(class="fa-solid fa-lock")
+            span Phân quyền

@@ -7,6 +7,11 @@ import { checkPermission, notPermission } from "../../middlewares/admin/auth.mid
 
 export const index = async (req: Request, res: Response): Promise<void> => {
 
+    if (!checkPermission(res, "accounts_view")) {
+        notPermission(res);
+        return;
+    }
+
     const accounts = await Account.find({
         deleted: false,
     })

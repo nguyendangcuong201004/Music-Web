@@ -35,14 +35,45 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.index = void 0;
+var song_model_1 = __importDefault(require("../../models/song.model"));
+var topic_model_1 = __importDefault(require("../../models/topic.model"));
+var singer_mode_1 = __importDefault(require("../../models/singer.mode"));
+var account_model_1 = __importDefault(require("../../models/account.model"));
+var user_model_1 = __importDefault(require("../../models/user.model"));
+var favorite_song_model_1 = __importDefault(require("../../models/favorite-song.model"));
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        res.render("admin/pages/dashboard/index.pug", {
-            pageTitle: "Tổng quan Spotify"
-        });
-        return [2 /*return*/];
+    var _a, countSong, countTopic, countSinger, countAccount, countUser, countFavorite, statistic;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, Promise.all([
+                    song_model_1.default.countDocuments({ deleted: false }),
+                    topic_model_1.default.countDocuments({ deleted: false }),
+                    singer_mode_1.default.countDocuments({ deleted: false }),
+                    account_model_1.default.countDocuments({ deleted: false }),
+                    user_model_1.default.countDocuments({ deleted: false }),
+                    favorite_song_model_1.default.countDocuments({ deleted: false }),
+                ])];
+            case 1:
+                _a = _b.sent(), countSong = _a[0], countTopic = _a[1], countSinger = _a[2], countAccount = _a[3], countUser = _a[4], countFavorite = _a[5];
+                statistic = {
+                    countSong: countSong,
+                    countTopic: countTopic,
+                    countSinger: countSinger,
+                    countAccount: countAccount,
+                    countUser: countUser,
+                    countFavorite: countFavorite,
+                };
+                res.render("admin/pages/dashboard/index.pug", {
+                    pageTitle: "Tổng quan Spotify",
+                    statistic: statistic
+                });
+                return [2 /*return*/];
+        }
     });
 }); };
 exports.index = index;

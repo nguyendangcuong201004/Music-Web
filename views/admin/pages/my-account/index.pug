@@ -3,38 +3,39 @@ include ../../mixins/alert.pug
 
 block main
     +alert-success()
-    h1(class="mb-4") Thông tin cá nhân
 
-    .card.mb-3
-        .card-header Hồ sơ
-        .card-body
-            .row
-                .col-md-3
-                    if(user.avatar)
-                        img(src=user.avatar class="img-fluid rounded mb-3" alt=user.fullName)
-                    else
-                        img(src="/images/favicon.ico" width="100px" class="mb-3" alt="avatar")
-                .col-md-9
-                    p
-                        b Họ và tên:
-                        |  #{user.fullName}
-                    p
-                        b Email:
-                        |  #{user.email}
-                    p
-                        b Số điện thoại:
-                        |  #{user.phone ? user.phone : "Chưa cập nhật"}
-                    p
-                        b Trạng thái:
-                        if (user.status == "active")
-                            span(class="badge badge-success ml-1") Hoạt động
-                        else
-                            span(class="badge badge-danger ml-1") Dừng hoạt động
-                    if(role)
-                        p
-                            b Nhóm quyền:
-                            |  #{role.title}
-                    a(
-                        href=`/${prefixAdmin}/my-account/edit`
-                        class="btn btn-primary btn-sm"
-                    ) Chỉnh sửa thông tin
+    .profile-page
+        .profile-card
+            .profile-banner
+            .profile-avatar
+                if(user.avatar)
+                    img(src=user.avatar alt=user.fullName)
+                else
+                    img(src="/images/favicon.ico" alt="avatar")
+            h3(class="profile-name") #{user.fullName}
+            span(class="profile-role")
+                i(class="fa-solid fa-shield-halved mr-1")
+                | #{role ? role.title : "Chưa có nhóm quyền"}
+            if (user.status == "active")
+                span(class="badge badge-success profile-status") Hoạt động
+            else
+                span(class="badge badge-danger profile-status") Dừng hoạt động
+
+            ul(class="profile-info-list")
+                li
+                    i(class="fa-solid fa-envelope")
+                    .profile-info-item
+                        small Email
+                        span #{user.email}
+                li
+                    i(class="fa-solid fa-phone")
+                    .profile-info-item
+                        small Số điện thoại
+                        span #{user.phone ? user.phone : "Chưa cập nhật"}
+
+            a(
+                href=`/${prefixAdmin}/my-account/edit`
+                class="btn btn-profile"
+            )
+                i(class="fa-solid fa-pen mr-1")
+                |  Chỉnh sửa thông tin

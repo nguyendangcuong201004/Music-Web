@@ -46,7 +46,12 @@ var general = function (req, res) { return __awaiter(void 0, void 0, void 0, fun
     var setting;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, setting_model_1.default.findOne({})];
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "settings_view")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, setting_model_1.default.findOne({})];
             case 1:
                 setting = _a.sent();
                 res.render("admin/pages/settings/general.pug", {

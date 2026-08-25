@@ -1,8 +1,10 @@
 import { Request, Response } from "express"
 import Account from "../../models/account.model"
+import Role from "../../models/role.model"
 import { systemConfig } from "../../config/system"
 import { hashPassword } from "../../helpers/hashPassword.helper"
 import { generateHelper } from "../../helpers/generate.helper"
+import { ALL_PERMISSIONS, STAFF_PERMISSIONS } from "../../helpers/permissions.helper"
 
 // [GET] /admin/auth/login
 export const login = async (req: Request, res: Response): Promise<void> => {
@@ -113,12 +115,54 @@ export const registerPost = async (req: Request, res: Response): Promise<void> =
         return;
     }
 
+    // Tài khoản đầu tiên của hệ thống -> Quản trị viên cao nhất (full quyền)
+    // Các tài khoản sau -> Nhân viên (chỉ CRUD chủ đề, bài hát, ca sĩ)
+    const accountCount = await Account.countDocuments({ deleted: false });
+
+    let roleId: string;
+
+    if (accountCount === 0) {
+        let superRole = await Role.findOne({
+            title: "Quản trị viên cao nhất",
+            deleted: false,
+        });
+
+        if (!superRole) {
+            superRole = new Role({
+                title: "Quản trị viên cao nhất",
+                description: "Có toàn quyền trong hệ thống",
+                permissions: ALL_PERMISSIONS,
+            });
+            await superRole.save()
+        }
+
+        roleId = superRole.id;
+    }
+    else {
+        let staffRole = await Role.findOne({
+            title: "Nhân viên",
+            deleted: false,
+        });
+
+        if (!staffRole) {
+            staffRole = new Role({
+                title: "Nhân viên",
+                description: "Chỉ quản lý chủ đề, bài hát và ca sĩ",
+                permissions: STAFF_PERMISSIONS,
+            });
+            await staffRole.save()
+        }
+
+        roleId = staffRole.id;
+    }
+
     const accountObject = {
         fullName: req.body.fullName,
         email: email,
         password: hashPassword(req.body.password),
         phone: req.body.phone,
         token: generateHelper.generateRandomString(30),
+        roleId: roleId,
         status: "active",
     };
 

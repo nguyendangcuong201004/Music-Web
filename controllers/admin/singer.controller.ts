@@ -6,6 +6,11 @@ import { checkPermission, notPermission } from "../../middlewares/admin/auth.mid
 
 export const index = async (req: Request, res: Response): Promise<void> => {
 
+    if (!checkPermission(res, "singers_view")) {
+        notPermission(res);
+        return;
+    }
+
     const singers = await Singer.find({
         deleted: false,
     })

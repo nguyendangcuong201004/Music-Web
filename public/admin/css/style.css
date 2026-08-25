@@ -283,3 +283,269 @@ body {
     font-weight: 600;
 }
 /* End error 403 */
+
+/* Trang phan quyen */
+table[table-permissions] {
+    color: #fff;
+}
+
+table[table-permissions] th,
+table[table-permissions] td {
+    border-color: #282828;
+    vertical-align: middle;
+}
+
+table[table-permissions] thead th {
+    color: #fff;
+    border-bottom: 2px solid #1ED760;
+}
+
+table[table-permissions] tbody tr:hover {
+    color: #fff;
+}
+
+/* Dong tieu de nhom quyen (Quyen xem / Them moi / Chinh sua / Xoa) */
+table[table-permissions] tr[data-name="view"] td,
+table[table-permissions] tr[data-name="create"] td,
+table[table-permissions] tr[data-name="edit"] td,
+table[table-permissions] tr[data-name="delete"] td {
+    background-color: #181818;
+}
+
+table[table-permissions] tr[data-name="view"] td b,
+table[table-permissions] tr[data-name="create"] td b,
+table[table-permissions] tr[data-name="edit"] td b,
+table[table-permissions] tr[data-name="delete"] td b {
+    color: #1ED760;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Alert thong bao chi xem phan quyen */
+.alert-info[role], .main .alert-info {
+    background-color: rgba(30, 215, 96, 0.08);
+    border: 1px solid #1ED760;
+    color: #fff;
+}
+/* End trang phan quyen */
+
+/* Dashboard */
+.welcome-section {
+    margin-bottom: 25px;
+}
+
+.welcome-section .welcome-title {
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.welcome-section .welcome-subtitle {
+    color: #b3b3b3;
+    margin-bottom: 0;
+}
+
+.section-title {
+    color: #1ED760;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.stat-grid,
+.quick-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 15px;
+}
+
+.stat-card {
+    background-color: #181818;
+    border: 1px solid #282828;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    border-color: #1ED760;
+    text-decoration: none;
+}
+
+.stat-card .stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.stat-icon-green { background-color: rgba(30, 215, 96, 0.15); color: #1ED760 !important; }
+.stat-icon-blue { background-color: rgba(80, 140, 255, 0.15); color: #508cff !important; }
+.stat-icon-orange { background-color: rgba(255, 150, 50, 0.15); color: #ff9632 !important; }
+.stat-icon-purple { background-color: rgba(170, 100, 255, 0.15); color: #aa64ff !important; }
+.stat-icon-cyan { background-color: rgba(50, 200, 220, 0.15); color: #32c8dc !important; }
+.stat-icon-pink { background-color: rgba(255, 80, 130, 0.15); color: #ff5082 !important; }
+
+.stat-card .stat-value {
+    color: #fff;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-card .stat-label {
+    color: #b3b3b3;
+    font-size: 13px;
+}
+
+.quick-card {
+    background-color: #181818;
+    border: 1px solid #282828;
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.quick-card:hover {
+    transform: translateY(-4px);
+    border-color: #1ED760;
+    color: #1ED760;
+    text-decoration: none;
+}
+
+.quick-card i {
+    color: #1ED760;
+}
+/* End dashboard */
+
+/* Thong tin ca nhan */
+.profile-page {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-page .profile-card {
+    background-color: #181818;
+    border: 1px solid #282828;
+    border-radius: 16px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.profile-page .profile-banner {
+    height: 90px;
+    background: linear-gradient(135deg, #1ED760 0%, #117a37 100%);
+}
+
+.profile-page .profile-avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background-color: #121212;
+    border: 4px solid #181818;
+    margin: -65px auto 10px;
+    overflow: hidden;
+}
+
+.profile-page .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-page .profile-name {
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.profile-page .profile-role {
+    display: inline-block;
+    color: #1ED760;
+    background-color: rgba(30, 215, 96, 0.1);
+    border: 1px solid #1ED760;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.profile-page .profile-status {
+    display: block;
+    margin: 10px auto 0;
+    width: fit-content;
+}
+
+.profile-page .profile-info-list {
+    list-style: none;
+    padding: 20px 30px 0;
+    margin: 20px 0 0;
+    border-top: 1px solid #282828;
+    text-align: left;
+}
+
+.profile-page .profile-info-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+}
+
+.profile-page .profile-info-list li > i {
+    color: #1ED760;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.profile-page .profile-info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-page .profile-info-item small {
+    color: #b3b3b3;
+}
+
+.profile-page .profile-info-item span {
+    color: #fff;
+    font-weight: 500;
+}
+
+.profile-page .btn-profile {
+    display: inline-block;
+    background-color: #1ED760;
+    border-color: #1ED760;
+    color: #000;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 9px 24px;
+    margin: 20px 0 30px;
+}
+
+.profile-page .btn-profile:hover {
+    background-color: #169c46;
+    border-color: #169c46;
+    color: #000;
+}
+/* End thong tin ca nhan */

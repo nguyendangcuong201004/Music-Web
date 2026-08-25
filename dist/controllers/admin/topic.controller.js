@@ -46,9 +46,14 @@ var index = function (req, res) { return __awaiter(void 0, void 0, void 0, funct
     var topics;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, topic_model_1.default.find({
-                    deleted: false,
-                })];
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "topics_view")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, topic_model_1.default.find({
+                        deleted: false,
+                    })];
             case 1:
                 topics = _a.sent();
                 res.render("admin/pages/topics/index.pug", {

@@ -41,9 +41,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerPost = exports.register = exports.logout = exports.loginPost = exports.login = void 0;
 var account_model_1 = __importDefault(require("../../models/account.model"));
+var role_model_1 = __importDefault(require("../../models/role.model"));
 var system_1 = require("../../config/system");
 var hashPassword_helper_1 = require("../../helpers/hashPassword.helper");
 var generate_helper_1 = require("../../helpers/generate.helper");
+var permissions_helper_1 = require("../../helpers/permissions.helper");
 // [GET] /admin/auth/login
 var login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -119,7 +121,7 @@ var register = function (req, res) { return __awaiter(void 0, void 0, void 0, fu
 exports.register = register;
 // [POST] /admin/auth/register
 var registerPost = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, emailExists, accountObject, account;
+    var email, emailExists, accountCount, roleId, superRole, staffRole, accountObject, account;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -161,19 +163,63 @@ var registerPost = function (req, res) { return __awaiter(void 0, void 0, void 0
                     res.redirect("back");
                     return [2 /*return*/];
                 }
+                return [4 /*yield*/, account_model_1.default.countDocuments({ deleted: false })];
+            case 2:
+                accountCount = _a.sent();
+                if (!(accountCount === 0)) return [3 /*break*/, 6];
+                return [4 /*yield*/, role_model_1.default.findOne({
+                        title: "Quản trị viên cao nhất",
+                        deleted: false,
+                    })];
+            case 3:
+                superRole = _a.sent();
+                if (!!superRole) return [3 /*break*/, 5];
+                superRole = new role_model_1.default({
+                    title: "Quản trị viên cao nhất",
+                    description: "Có toàn quyền trong hệ thống",
+                    permissions: permissions_helper_1.ALL_PERMISSIONS,
+                });
+                return [4 /*yield*/, superRole.save()];
+            case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5:
+                roleId = superRole.id;
+                return [3 /*break*/, 10];
+            case 6: return [4 /*yield*/, role_model_1.default.findOne({
+                    title: "Nhân viên",
+                    deleted: false,
+                })];
+            case 7:
+                staffRole = _a.sent();
+                if (!!staffRole) return [3 /*break*/, 9];
+                staffRole = new role_model_1.default({
+                    title: "Nhân viên",
+                    description: "Chỉ quản lý chủ đề, bài hát và ca sĩ",
+                    permissions: permissions_helper_1.STAFF_PERMISSIONS,
+                });
+                return [4 /*yield*/, staffRole.save()];
+            case 8:
+                _a.sent();
+                _a.label = 9;
+            case 9:
+                roleId = staffRole.id;
+                _a.label = 10;
+            case 10:
                 accountObject = {
                     fullName: req.body.fullName,
                     email: email,
                     password: (0, hashPassword_helper_1.hashPassword)(req.body.password),
                     phone: req.body.phone,
                     token: generate_helper_1.generateHelper.generateRandomString(30),
+                    roleId: roleId,
                     status: "active",
                 };
                 account = new account_model_1.default(accountObject);
                 return [4 /*yield*/, account.save()
                     // Đăng ký thành công thì đăng nhập luôn
                 ];
-            case 2:
+            case 11:
                 _a.sent();
                 // Đăng ký thành công thì đăng nhập luôn
                 res.cookie("token", account.token);

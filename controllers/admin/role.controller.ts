@@ -6,6 +6,11 @@ import { checkPermission, notPermission } from "../../middlewares/admin/auth.mid
 
 export const index = async (req: Request, res: Response): Promise<void> => {
 
+    if (!checkPermission(res, "roles_view")) {
+        notPermission(res);
+        return;
+    }
+
     const records = await Role.find({
         deleted: false,
     })
@@ -140,11 +145,7 @@ export const deleteRole = async (req: Request, res: Response): Promise<void> => 
 
 export const permissions = async (req: Request, res: Response): Promise<void> => {
 
-    if (!checkPermission(res, "roles_permissions")) {
-        notPermission(res);
-        return;
-    }
-
+    // Mọi tài khoản admin đều được vào xem trang phân quyền
     const records = await Role.find({
         deleted: false,
     })

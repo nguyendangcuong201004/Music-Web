@@ -4,6 +4,11 @@ import { checkPermission, notPermission } from "../../middlewares/admin/auth.mid
 
 export const general = async (req: Request, res: Response): Promise<void> => {
 
+    if (!checkPermission(res, "settings_view")) {
+        notPermission(res);
+        return;
+    }
+
     const setting = await Setting.findOne({})
 
     res.render("admin/pages/settings/general.pug", {
