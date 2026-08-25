@@ -1,0 +1,84 @@
+extends ../../layouts/default.pug 
+include ../../mixins/alert.pug
+
+block main
+
+    +alert-success()
+    h1(class="mb-4") Spotify's Songs
+
+    .card.mb-3 
+        .card-header Danh sách
+        .card-body 
+            .row 
+                .col-8
+
+                .col-4.text-right 
+                    a(
+                        href=`/${prefixAdmin}/songs/create`
+                        class="button-add"
+                    ) + Thêm mới
+            table(
+            class="table table-hover table-sm"
+            checkbox-multi=""
+            )
+                thead
+                    tr  
+                        th STT
+                        th Hình ảnh
+                        th Tiêu đề
+                        th Nghệ sĩ
+                        th Thể loại
+                        th Trạng thái
+                        th Hành động
+                tbody
+                    each item, index in songs
+                        tr 
+                            td #{index+1}
+                            td
+                                img(
+                                    src=item.avatar
+                                    alt=item.title
+                                    width="100px"
+                                    height="auto"
+                                )
+                            td #{item.title}
+                            td #{item.singer}
+                            td #{item.topic}
+                            td
+                                if (item.status === "active")
+                                    a(
+                                    href="javascript:;"
+                                    class="badge badge-success"
+                                    button-change-status=""
+                                    data-id=item.id
+                                    data-status="inactive"
+                                    ) Hoạt động
+                                else
+                                    a(
+                                    href="javascript:;"
+                                    class="badge badge-danger"
+                                    button-change-status=""
+                                    data-id=item.id
+                                    data-status="active"
+                                    ) Dừng hoạt động
+                            td(class="list-button")
+                                a(
+                                    class="button-action"
+                                    href=`/${prefixAdmin}/songs/detail/${item.id}`
+                                ) Chi tiết
+                                a(
+                                    class="button-action"
+                                    href=`/${prefixAdmin}/songs/edit/${item.id}`
+                                ) Sửa
+                                a(
+                                    class="button-action"
+                                    button-delete
+                                    href=`/${prefixAdmin}/songs/delete/${item.id}`
+                                ) Xóa
+        
+    form(
+        form-change-status 
+        method="POST"
+        action=""
+        data-path=`/${prefixAdmin}/songs/change-status`
+    )

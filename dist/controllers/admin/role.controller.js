@@ -35,23 +35,256 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.permissions = exports.index = void 0;
+exports.permissionsPatch = exports.permissions = exports.deleteRole = exports.editPatch = exports.edit = exports.createPost = exports.create = exports.detail = exports.index = void 0;
+var role_model_1 = __importDefault(require("../../models/role.model"));
+var account_model_1 = __importDefault(require("../../models/account.model"));
+var system_1 = require("../../config/system");
+var auth_middleware_1 = require("../../middlewares/admin/auth.middleware");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var records, _i, records_1, record, countAccount, creator;
     return __generator(this, function (_a) {
-        res.render("admin/pages/roles/index.pug", {
-            pageTitle: "Spofity's Roles"
-        });
-        return [2 /*return*/];
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, role_model_1.default.find({
+                    deleted: false,
+                })];
+            case 1:
+                records = _a.sent();
+                _i = 0, records_1 = records;
+                _a.label = 2;
+            case 2:
+                if (!(_i < records_1.length)) return [3 /*break*/, 6];
+                record = records_1[_i];
+                return [4 /*yield*/, account_model_1.default.countDocuments({
+                        roleId: record.id,
+                        deleted: false,
+                    })];
+            case 3:
+                countAccount = _a.sent();
+                record["countAccount"] = countAccount;
+                return [4 /*yield*/, account_model_1.default.findOne({
+                        _id: record.createdBy,
+                        deleted: false
+                    })];
+            case 4:
+                creator = _a.sent();
+                record["creator"] = creator ? creator.fullName : "";
+                _a.label = 5;
+            case 5:
+                _i++;
+                return [3 /*break*/, 2];
+            case 6:
+                res.render("admin/pages/roles/index.pug", {
+                    pageTitle: "Nh\u00F3m quy\u1EC1n",
+                    records: records
+                });
+                return [2 /*return*/];
+        }
     });
 }); };
 exports.index = index;
-var permissions = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+var detail = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var roleId, record;
     return __generator(this, function (_a) {
-        res.render("admin/pages/roles/permissions.pug", {
-            pageTitle: "Spofity's Roles"
+        switch (_a.label) {
+            case 0:
+                roleId = req.params.roleId;
+                return [4 /*yield*/, role_model_1.default.findOne({
+                        _id: roleId,
+                        deleted: false,
+                    })];
+            case 1:
+                record = _a.sent();
+                res.render("admin/pages/roles/detail.pug", {
+                    pageTitle: "Chi ti\u1EBFt nh\u00F3m quy\u1EC1n",
+                    record: record
+                });
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.detail = detail;
+var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        if (!(0, auth_middleware_1.checkPermission)(res, "roles_create")) {
+            (0, auth_middleware_1.notPermission)(res);
+            return [2 /*return*/];
+        }
+        res.render("admin/pages/roles/create.pug", {
+            pageTitle: "Spotify's Roles"
         });
         return [2 /*return*/];
     });
 }); };
+exports.create = create;
+var createPost = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var roleObject, role;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "roles_create")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                roleObject = {
+                    title: req.body.title,
+                    description: req.body.description,
+                };
+                role = new role_model_1.default(roleObject);
+                return [4 /*yield*/, role.save()];
+            case 1:
+                _a.sent();
+                req.flash('success', "Spotify \u0111\u00E3 th\u00EAm nh\u00F3m quy\u1EC1n ".concat(roleObject.title, " th\u00E0nh c\u00F4ng!"));
+                res.redirect("/".concat(system_1.systemConfig.prefixAdmin, "/roles"));
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.createPost = createPost;
+var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var roleId, record;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "roles_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                roleId = req.params.roleId;
+                return [4 /*yield*/, role_model_1.default.findOne({
+                        _id: roleId,
+                        deleted: false,
+                    })];
+            case 1:
+                record = _a.sent();
+                res.render("admin/pages/roles/edit.pug", {
+                    pageTitle: "Spotify's Roles",
+                    record: record
+                });
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.edit = edit;
+var editPatch = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var roleId, roleObject;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "roles_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                roleId = req.params.roleId;
+                roleObject = {
+                    title: req.body.title,
+                    description: req.body.description,
+                };
+                return [4 /*yield*/, role_model_1.default.updateOne({
+                        _id: roleId,
+                        deleted: false,
+                    }, roleObject)];
+            case 1:
+                _a.sent();
+                req.flash('success', "Spotify \u0111\u00E3 c\u1EADp nh\u1EADt nh\u00F3m quy\u1EC1n th\u00E0nh c\u00F4ng!");
+                res.redirect("back");
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.editPatch = editPatch;
+var deleteRole = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var roleId;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "roles_delete")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                roleId = req.params.roleId;
+                return [4 /*yield*/, role_model_1.default.updateOne({
+                        _id: roleId,
+                    }, {
+                        deleted: true,
+                        deletedAt: new Date(),
+                    })];
+            case 1:
+                _a.sent();
+                req.flash('success', "Spotify \u0111\u00E3 x\u00F3a nh\u00F3m quy\u1EC1n th\u00E0nh c\u00F4ng!");
+                res.redirect("back");
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.deleteRole = deleteRole;
+var permissions = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var records;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "roles_permissions")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, role_model_1.default.find({
+                        deleted: false,
+                    })];
+            case 1:
+                records = _a.sent();
+                res.render("admin/pages/roles/permissions.pug", {
+                    pageTitle: "Ph\u00E2n quy\u1EC1n",
+                    records: records
+                });
+                return [2 /*return*/];
+        }
+    });
+}); };
 exports.permissions = permissions;
+var permissionsPatch = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var roles, _i, roles_1, item, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "roles_permissions")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 6, , 7]);
+                roles = JSON.parse(req.body.roles);
+                _i = 0, roles_1 = roles;
+                _a.label = 2;
+            case 2:
+                if (!(_i < roles_1.length)) return [3 /*break*/, 5];
+                item = roles_1[_i];
+                return [4 /*yield*/, role_model_1.default.updateOne({
+                        _id: item.id,
+                        deleted: false
+                    }, {
+                        permissions: item.permissions
+                    })];
+            case 3:
+                _a.sent();
+                _a.label = 4;
+            case 4:
+                _i++;
+                return [3 /*break*/, 2];
+            case 5:
+                req.flash('success', "Spotify \u0111\u00E3 c\u1EADp nh\u1EADt ph\u00E2n quy\u1EC1n th\u00E0nh c\u00F4ng!");
+                res.redirect("back");
+                return [3 /*break*/, 7];
+            case 6:
+                error_1 = _a.sent();
+                req.flash('error', "C\u1EADp nh\u1EADt ph\u00E2n quy\u1EC1n th\u1EA5t b\u1EA1i!");
+                res.redirect("back");
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); };
+exports.permissionsPatch = permissionsPatch;

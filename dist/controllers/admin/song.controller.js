@@ -44,6 +44,7 @@ var song_model_1 = __importDefault(require("../../models/song.model"));
 var singer_mode_1 = __importDefault(require("../../models/singer.mode"));
 var topic_model_1 = __importDefault(require("../../models/topic.model"));
 var system_1 = require("../../config/system");
+var auth_middleware_1 = require("../../middlewares/admin/auth.middleware");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var songs, _i, songs_1, song, singer, topic;
     return __generator(this, function (_a) {
@@ -91,6 +92,10 @@ var changeStatus = function (req, res) { return __awaiter(void 0, void 0, void 0
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "songs_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 songId = req.params.songId;
                 status = req.params.status;
                 return [4 /*yield*/, song_model_1.default.updateOne({
@@ -147,6 +152,10 @@ var deleteSong = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "songs_delete")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 songId = req.params.songId;
                 return [4 /*yield*/, song_model_1.default.findOne({
                         _id: songId,
@@ -172,9 +181,14 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     var topics, singers;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, topic_model_1.default.find({
-                    deleted: false
-                })];
+            case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "songs_create")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
+                return [4 /*yield*/, topic_model_1.default.find({
+                        deleted: false
+                    })];
             case 1:
                 topics = _a.sent();
                 return [4 /*yield*/, singer_mode_1.default.find({
@@ -197,6 +211,10 @@ var createPost = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "songs_create")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 if (req.body.avatar) {
                     req.body.avatar = req.body.avatar[0];
                 }
@@ -218,6 +236,10 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "songs_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 songId = req.params.songId;
                 return [4 /*yield*/, song_model_1.default.findOne({
                         _id: songId,
@@ -265,6 +287,10 @@ var editPatch = function (req, res) { return __awaiter(void 0, void 0, void 0, f
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "songs_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 songId = req.params.songId;
                 if (req.body.avatar) {
                     req.body.avatar = req.body.avatar[0];

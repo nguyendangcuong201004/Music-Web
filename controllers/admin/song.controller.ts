@@ -3,6 +3,7 @@ import Song from "../../models/song.model"
 import Singer from "../../models/singer.mode"
 import Topic from "../../models/topic.model"
 import { systemConfig } from "../../config/system"
+import { checkPermission, notPermission } from "../../middlewares/admin/auth.middleware"
 
 
 export const index = async (req: Request, res: Response): Promise<void> => {
@@ -31,6 +32,12 @@ export const index = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const changeStatus = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "songs_edit")) {
+        notPermission(res);
+        return;
+    }
+
     const songId = req.params.songId;
     const status = req.params.status;
 
@@ -71,6 +78,12 @@ export const detail = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const deleteSong = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "songs_delete")) {
+        notPermission(res);
+        return;
+    }
+
     const songId = req.params.songId;
     const song = await Song.findOne({
         _id: songId,
@@ -89,6 +102,12 @@ export const deleteSong = async (req: Request, res: Response): Promise<void> => 
 
 
 export const create = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "songs_create")) {
+        notPermission(res);
+        return;
+    }
+
     const topics = await Topic.find({
         deleted: false
     })
@@ -107,6 +126,11 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
 
+    if (!checkPermission(res, "songs_create")) {
+        notPermission(res);
+        return;
+    }
+
     if (req.body.avatar){
         req.body.avatar = req.body.avatar[0];
     }
@@ -122,6 +146,12 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
 }
 
 export const edit = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "songs_edit")) {
+        notPermission(res);
+        return;
+    }
+
     const songId = req.params.songId;
 
     const song = await Song.findOne({
@@ -158,6 +188,12 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const editPatch = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "songs_edit")) {
+        notPermission(res);
+        return;
+    }
+
     const songId = req.params.songId;
 
     if (req.body.avatar){

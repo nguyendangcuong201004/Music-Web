@@ -1,0 +1,28 @@
+extends ../../layouts/default.pug
+
+block main
+
+    h1(class="mb-4") Chi tiết nhóm quyền: #{record.title}
+
+    .card.mb-3
+        .card-header Thông tin
+        .card-body
+            p
+                b Tên nhóm quyền:
+                |  #{record.title}
+            p
+                b Mô tả ngắn:
+                |  #{record.description}
+            if(record.permissions && record.permissions.length > 0)
+                p
+                    b Quyền hạn đã cấp:
+                    ul
+                        each permission in record.permissions
+                            li #{permission}
+            else
+                p
+                    b Quyền hạn: chưa được phân quyền.
+            a(
+                href=`/${prefixAdmin}/roles/edit/${record.id}`
+                class="btn btn-warning btn-sm"
+            ) Chỉnh sửa

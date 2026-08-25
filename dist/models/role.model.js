@@ -24,4 +24,4 @@ var rolesSchema = new mongoose_1.default.Schema({
     timestamps: true
 });
 var Role = mongoose_1.default.model('Role', rolesSchema, "roles");
-module.exports = Role;
+exports.default = Role;

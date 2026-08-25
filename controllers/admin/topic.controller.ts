@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import Topic from "../../models/topic.model"
 import Song from "../../models/song.model"
+import { checkPermission, notPermission } from "../../middlewares/admin/auth.middleware"
 
 export const index = async (req: Request, res: Response): Promise<void> => {
     
@@ -15,6 +16,12 @@ export const index = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const changeStatus = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "topics_edit")) {
+        notPermission(res);
+        return;
+    }
+
     const status = req.params.status;
     const topicId = req.params.topicId;
 
@@ -45,12 +52,22 @@ export const detail = async (req: Request, res: Response): Promise<void> => {
 
 export const create = async (req: Request, res: Response): Promise<void> => {
 
+    if (!checkPermission(res, "topics_create")) {
+        notPermission(res);
+        return;
+    }
+
     res.render("admin/pages/topics/create.pug", {
         pageTitle: `Spotify's Topics`
     })
 }
 
 export const createPost = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "topics_create")) {
+        notPermission(res);
+        return;
+    }
 
     const topicObject = {
         title: req.body.title,
@@ -68,6 +85,12 @@ export const createPost = async (req: Request, res: Response): Promise<void> => 
 }
 
 export const edit = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "topics_edit")) {
+        notPermission(res);
+        return;
+    }
+
     const topicId = req.params.topicId;
     
     const topic = await Topic.findOne({
@@ -81,7 +104,12 @@ export const edit = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const editPatch = async (req: Request, res: Response): Promise<void> => {
-    
+
+    if (!checkPermission(res, "topics_edit")) {
+        notPermission(res);
+        return;
+    }
+
     const topicId = req.params.topicId;
     console.log(topicId)
 
@@ -102,6 +130,11 @@ export const editPatch = async (req: Request, res: Response): Promise<void> => {
 
 
 export const deleteTopic = async (req: Request, res: Response): Promise<void> => {
+
+    if (!checkPermission(res, "topics_delete")) {
+        notPermission(res);
+        return;
+    }
 
     const topicId = req.params.topicId;
 

@@ -1,0 +1,127 @@
+extends ../../layouts/default.pug  
+include ../../mixins/alert.pug 
+
+block main 
+    +alert-success()
+    h1(class="mb-4") #{pageTitle}
+    form(
+        action=`/${prefixAdmin}/songs/edit/${song.id}?_method=PATCH`
+        method="POST"
+        enctype="multipart/form-data"
+    )
+        div(class="form-group")
+            label(for="title") Tên bài hát 
+            input(
+                type="text"
+                class="form-control"
+                id="title"
+                name="title"
+                value=song.title
+                required
+            )
+        div(class="form-group")
+            label(for="topic") Thể loại nhạc
+            select(
+                class="form-control"
+                id="topic"
+                name="topicId"
+                required
+            )
+                option(value="" disabled selected) -- Chọn thể loại --
+                each topic in topics
+                    if (topic.id == topicOfSong.id)
+                        option(value=topic.id selected) #{topic.title}
+                    else    
+                        option(value=topic.id) #{topic.title}
+        div(class="form-group")
+            label(for="singer") Nghệ sỹ
+            select(
+                class="form-control"
+                id="singer"
+                name="singerId"
+                required
+            )
+                option(value="" disabled selected) -- Nghệ sỹ --
+                each singer in singers
+                    if (singer.id == singerOfSong.id)
+                        option(value=singer.id selected) #{singer.fullName}
+                    else    
+                        option(value=singer.id) #{singer.fullName}
+        div(
+            class="form-group"
+            upload-image
+        ) 
+            label(for="avatar") Ảnh
+            input(
+                type="file"
+                class="form-control-file"
+                id="avatar"
+                name="avatar"
+                accept="image/*"
+                upload-image-input
+            )
+            img(
+                src=song.avatar
+                class="image-preview"
+                upload-image-preview
+            )
+        div(class="form-group" upload-audio)
+            label(for="audio") Audio 
+            input(
+                type="file"
+                class="form-control-file"
+                id="audio"
+                name="audio"
+                accept="audio/*"
+                upload-audio-input
+            ) 
+            audio(
+                src=song.audio
+                controls 
+                upload-audio-play
+            ) 
+        div(class="form-group")
+            label(for="desc") Thông tin bài hát 
+            textarea(
+                type="text"
+                class="form-control"
+                id="desc"
+                name="description"
+                rows="5"
+                textarea-mce
+            ) !{song.description}
+        div(class="form-group")
+            label(for="lyrics") Lyrics
+            textarea(
+                type="text"
+                class="form-control"
+                id="lyrics"
+                name="lyrics"
+                rows="5"
+                textarea-mce
+            ) !{song.lyrics}
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                id="statusActive"
+                name="status"
+                value="active"
+                checked = true ? song.status == "active" : false
+            )
+            label(for="statusActive" class="form-check-label") Hoạt động  
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                id="statusInActive"
+                name="status"
+                value="inactive"
+                checked = true ? song.status == "inactive" : false
+            )
+            label(for="statusInActive" class="form-check-label") Dừng hoạt động  
+        div(class="form-group")
+            button(
+                type="submit"
+                class="btn btn-primary" 
+            ) Update

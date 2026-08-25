@@ -1,0 +1,79 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+
+    +alert-success()
+    +alert-error()
+    h1(class="mb-4") Tài khoản user
+
+    .card.mb-3
+        .card-header Danh sách
+        .card-body
+            .row
+                .col-8
+
+                .col-4.text-right
+                    a(
+                        href=`/${prefixAdmin}/users/create`
+                        class="button-add"
+                    ) + Thêm mới
+            table(
+                class="table table-hover table-sm"
+            )
+                thead
+                    tr
+                        th STT
+                        th Họ tên
+                        th Email
+                        th Số điện thoại
+                        th Số bài hát yêu thích
+                        th Trạng thái
+                        th Hành động
+                tbody
+                    if(users && users.length > 0)
+                        each item, index in users
+                            tr
+                                td #{index+1}
+                                td #{item.fullName}
+                                td #{item.email}
+                                td #{item.phone}
+                                td #{item.countFavorite}
+                                td
+                                    if (item.status === "active")
+                                        a(
+                                            href="javascript:;"
+                                            class="badge badge-success"
+                                            button-change-status=""
+                                            data-id=item.id
+                                            data-status="inactive"
+                                        ) Hoạt động
+                                    else
+                                        a(
+                                            href="javascript:;"
+                                            class="badge badge-danger"
+                                            button-change-status=""
+                                            data-id=item.id
+                                            data-status="active"
+                                        ) Dừng hoạt động
+                                td(class="list-button")
+                                    a(
+                                        class="button-action"
+                                        href=`/${prefixAdmin}/users/edit/${item.id}`
+                                    ) Sửa
+                                    a(
+                                        class="button-action"
+                                        button-delete
+                                        button-delete-confirm=`Bạn có chắc muốn xóa tài khoản "${item.fullName}"?`
+                                        href=`/${prefixAdmin}/users/delete/${item.id}`
+                                    ) Xóa
+                    else
+                        tr
+                            td(colspan="7" class="text-center") Chưa có tài khoản user nào.
+
+    form(
+        form-change-status
+        method="POST"
+        action=""
+        data-path=`/${prefixAdmin}/users/change-status`
+    )

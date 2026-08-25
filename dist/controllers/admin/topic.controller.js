@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTopic = exports.editPatch = exports.edit = exports.createPost = exports.create = exports.detail = exports.changeStatus = exports.index = void 0;
 var topic_model_1 = __importDefault(require("../../models/topic.model"));
+var auth_middleware_1 = require("../../middlewares/admin/auth.middleware");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var topics;
     return __generator(this, function (_a) {
@@ -64,6 +65,10 @@ var changeStatus = function (req, res) { return __awaiter(void 0, void 0, void 0
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "topics_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 status = req.params.status;
                 topicId = req.params.topicId;
                 return [4 /*yield*/, topic_model_1.default.updateOne({
@@ -102,6 +107,10 @@ var detail = function (req, res) { return __awaiter(void 0, void 0, void 0, func
 exports.detail = detail;
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
+        if (!(0, auth_middleware_1.checkPermission)(res, "topics_create")) {
+            (0, auth_middleware_1.notPermission)(res);
+            return [2 /*return*/];
+        }
         res.render("admin/pages/topics/create.pug", {
             pageTitle: "Spotify's Topics"
         });
@@ -114,6 +123,10 @@ var createPost = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "topics_create")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 topicObject = {
                     title: req.body.title,
                     description: req.body.description,
@@ -136,6 +149,10 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "topics_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 topicId = req.params.topicId;
                 return [4 /*yield*/, topic_model_1.default.findOne({
                         _id: topicId,
@@ -157,6 +174,10 @@ var editPatch = function (req, res) { return __awaiter(void 0, void 0, void 0, f
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "topics_edit")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 topicId = req.params.topicId;
                 console.log(topicId);
                 topicObject = {
@@ -182,6 +203,10 @@ var deleteTopic = function (req, res) { return __awaiter(void 0, void 0, void 0,
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(0, auth_middleware_1.checkPermission)(res, "topics_delete")) {
+                    (0, auth_middleware_1.notPermission)(res);
+                    return [2 /*return*/];
+                }
                 topicId = req.params.topicId;
                 return [4 /*yield*/, topic_model_1.default.deleteOne({
                         _id: topicId

@@ -1,0 +1,20 @@
+extends ../../layouts/default.pug
+
+block main
+    .error-page
+        .error-card
+            .error-icon
+                i(class="fa-solid fa-lock")
+            .error-code 403
+            h2(class="error-title") Không có quyền truy cập!
+            p(class="error-message")
+                | Tài khoản của bạn không được cấp quyền thực hiện chức năng này.
+                br
+                | Vui lòng liên hệ quản trị viên để được cấp quyền.
+            .error-actions
+                a(href=`/${prefixAdmin}/dashboard` class="btn btn-success btn-back")
+                    i(class="fa-solid fa-house mr-1")
+                    |  Về trang chủ
+                a(href="javascript:history.back()" class="btn btn-outline-light btn-back")
+                    i(class="fa-solid fa-arrow-left mr-1")
+                    |  Quay lại

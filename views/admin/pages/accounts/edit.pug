@@ -1,0 +1,107 @@
+extends ../../layouts/default.pug
+include ../../mixins/alert.pug
+
+block main
+
+    h1(class="mb-4") Chỉnh sửa tài khoản: #{account.fullName}
+
+    form(
+        action=`/${prefixAdmin}/accounts/edit/${account.id}?_method=PATCH`
+        method="POST"
+        enctype="multipart/form-data"
+    )
+        div(class="form-group")
+            label(for="fullName") Họ tên
+            input(
+                type="text"
+                class="form-control"
+                id="fullName"
+                name="fullName"
+                value=account.fullName
+                required
+            )
+        div(class="form-group")
+            label(for="email") Email
+            input(
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                value=account.email
+                required
+            )
+        div(class="form-group")
+            label(for="password") Mật khẩu (bỏ trống nếu không đổi)
+            input(
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                minlength="6"
+            )
+        div(class="form-group")
+            label(for="phone") Số điện thoại
+            input(
+                type="text"
+                class="form-control"
+                id="phone"
+                name="phone"
+                value=account.phone
+            )
+        div(class="form-group")
+            label(for="roleId") Nhóm quyền
+            select(
+                class="form-control"
+                id="roleId"
+                name="roleId"
+                required
+            )
+                each role in roles
+                    option(
+                        value=role.id
+                        selected = true ? account.roleId == role.id : false
+                    ) #{role.title}
+        div(
+            class="form-group"
+            upload-image
+        )
+            label(for="avatar") Ảnh đại diện
+            input(
+                type="file"
+                class="form-control-file"
+                id="avatar"
+                name="avatar"
+                accept="image/*"
+                upload-image-input
+            )
+            img(
+                src=account.avatar
+                upload-image-preview
+                class="image-preview"
+            )
+
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                id="statusActive"
+                name="status"
+                value="active"
+                checked = true ? account.status=="active" : false
+            )
+            label(for="statusActive" class="form-check-label") Hoạt động
+        div(class="form-group form-check form-check-inline")
+            input(
+                type="radio"
+                class="form-check-input"
+                id="statusInActive"
+                name="status"
+                value="inactive"
+                checked = true ? account.status=="inactive" : false
+            )
+            label(for="statusInActive" class="form-check-label") Dừng Hoạt động
+        div(class="form-group")
+            button(
+                type="submit"
+                class="btn btn-primary"
+            ) Cập nhật

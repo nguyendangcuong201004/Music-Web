@@ -1,216 +1,249 @@
-# 🎵 Music-Web — Website Nghe Nhạc Trực Tuyến
+# Music-Web
 
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Pug](https://img.shields.io/badge/Pug-A86454?style=for-the-badge&logo=pug&logoColor=white)](https://pugjs.org/)
-[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+Music-Web is a full-stack online music streaming platform built with Node.js, TypeScript, Express and MongoDB. It renders pages on the server using the Pug template engine (SSR) and ships with an admin dashboard for managing topics, songs, singers, roles, admin accounts and site settings. Images and audio files are stored on Cloudinary, and the application is deployed to Vercel as a Serverless Function.
 
-Dự án website nghe nhạc trực tuyến xây dựng theo mô hình **Server-Side Rendering (SSR)** với **Node.js + TypeScript + Express + MongoDB + Pug**, có trang quản trị (admin) để quản lý chủ đề, bài hát, vai trò, và tích hợp **Cloudinary** để upload ảnh / file nhạc.
+Live demo: https://music-web-eta.vercel.app/topics
 
-🔗 **Live Demo:** [https://music-web-eta.vercel.app/topics](https://music-web-eta.vercel.app/topics)
+## Features
 
----
+### Client
+- Browse music topics and view songs grouped by topic
+- Song detail page with audio playback and lyrics
+- Like a song, add songs to favorites, and track listen counts
+- Playlist page
+- Song search that supports diacritic-insensitive matching (powered by `unidecode`), returning both an HTML results page and a JSON endpoint for search suggestions
 
-## ✨ Tính năng chính
+### Admin (`/admin`)
+- Login, register and logout with cookie-based token authentication
+- Role management (CRUD) and a permission matrix page that assigns fine-grained permissions per role (view / create / edit / delete for each module)
+- Permission checks enforced in every admin controller; unauthorized access returns a dedicated 403 page
+- Topic management: full CRUD, soft delete, status toggle, thumbnail upload to Cloudinary
+- Song management: full CRUD with avatar and audio uploads to Cloudinary, lyrics, status toggles and soft delete
+- Singer management: full CRUD with avatar upload, song counts per singer and soft delete
+- Admin account management: full CRUD with role assignment, duplicate-email validation, MD5-hashed passwords and audit fields (createdBy, updatedBy, deletedBy)
+- User account management: list, create, edit, delete and status toggles
+- Personal profile page (`/admin/my-account`) for viewing and editing the logged-in account
+- General settings page (website name, phone, email, address, copyright) stored as a single document in MongoDB
+- Rich text editing with TinyMCE, including image upload directly to Cloudinary
 
-### Phía người dùng (Client)
-- 🎧 Xem danh sách chủ đề nhạc (`/topics`) và danh sách bài hát theo chủ đề (`/songs/:slugTopic`)
-- ▶️ Trang chi tiết bài hát: nghe nhạc, xem lời bài hát (lyrics)
-- ❤️ Thả tim (like) và thêm bài hát vào danh sách yêu thích
-- 👀 Đếm lượt nghe bài hát
-- 🔍 Tìm kiếm bài hát theo tên (hỗ trợ tìm kiếm không dấu nhờ `unidecode`), có cả trang kết quả và API trả JSON cho gợi ý tìm kiếm
-- 🎼 Trang playlist (`/songs/playlist`)
+## Tech Stack
 
-### Phía quản trị (Admin — tiền tố `/admin`)
-- 📊 Dashboard tổng quan
-- 📁 Quản lý Chủ đề (Topics): thêm / sửa / xóa (xóa mềm), thay đổi trạng thái, upload ảnh lên Cloudinary
-- 🎵 Quản lý Bài hát (Songs): thêm / sửa / xóa mềm, thay đổi trạng thái, upload ảnh avatar và file audio lên Cloudinary
-- 👥 Quản lý Vai trò (Roles) & phân quyền
-- 🖼️ API upload ảnh cho trình soạn thảo TinyMCE
-
-> ⚠️ **Lưu ý:** Dự án hiện **chưa có trang CRUD cho Ca sĩ (Singers)**. Muốn thêm ca sĩ, bạn cần insert trực tiếp vào collection `singers` trên MongoDB (các trường: `fullName`, `avatar`, `status`, `slug`, `deleted`). Khi tạo bài hát trong admin, hệ thống sẽ lấy danh sách ca sĩ từ collection này.
-
----
-
-## 🛠 Công nghệ sử dụng
-
-| Thành phần | Công nghệ |
+| Layer | Technology |
 |---|---|
 | Runtime | Node.js |
-| Ngôn ngữ | TypeScript |
-| Framework | Express.js |
-| Cơ sở dữ liệu | MongoDB (Mongoose ODM + mongoose-slug-updater) |
-| Template Engine | Pug (SSR) |
-| Upload file | Multer (memory storage) → Cloudinary |
-| Session / Flash | express-session, express-flash, cookie-parser |
-| Khác | method-override, streamifier, unidecode, TinyMCE |
-| Deploy | Vercel (Serverless Functions) |
+| Language | TypeScript |
+| Web framework | Express.js |
+| View engine | Pug (server-side rendering) |
+| Database | MongoDB with Mongoose ODM |
+| Slug generation | mongoose-slug-updater |
+| File uploads | Multer (memory storage) streamed to Cloudinary |
+| Sessions and flash messages | express-session, connect-flash, express-flash, cookie-parser |
+| Other libraries | method-override, streamifier, unidecode |
+| Deployment | Vercel Serverless Functions |
 
-### Các model chính (collections trong MongoDB)
-| Model | Collection | Mô tả |
+## Architecture
+
+The application follows a classic layered MVC structure with server-side rendering:
+
+```
+Request
+  |
+  v
+index.ts (Express app)
+  |-- static assets (/public, /tinymce from node_modules)
+  |-- cookie-parser, express-session, express-flash, method-override, body-parser
+  |
+  +-- routes/client/*   --> client controllers --> Pug views (topics, songs, search)
+  |
+  +-- routes/admin/*    --> requireAuth middleware (validates token cookie,
+  |                          loads res.locals.user and res.locals.role)
+  |                          |
+  |                          +--> controller-level permission checks
+  |                                 (checkPermission against role.permissions)
+  |                                 |
+  |                                 +--> controllers --> Mongoose models --> MongoDB
+  |                                 |
+  |                                 +--> multer (memory) --> Cloudinary helper --> media URL
+  |
+  v
+Pug views rendered on the server (layouts, partials, mixins)
+```
+
+Key architectural points:
+- `config/database.ts` opens a single Mongoose connection at startup; `config/system.ts` holds the `/admin` URL prefix used across routes and views.
+- Uploads never touch disk: Multer keeps files in memory, `middlewares/admin/uploadCloud.middleware.ts` streams each buffer to Cloudinary via `helpers/uploadToCloudiary.helper.ts`, then rewrites `req.body[field]` with the resulting CDN URL.
+- Authentication uses a random 30-character token stored on the Account document and in a browser cookie; `middlewares/admin/auth.middleware.ts` resolves the current user and role on every admin request.
+- Authorization is data-driven: each Role stores a flat array of permission keys (for example `songs_edit`, `roles_permissions`), editable from the permissions matrix UI.
+- Deletes are soft by default (`deleted: true` plus `deletedAt`) so records can be recovered.
+- For Vercel, `index.ts` exports the Express app as the Serverless Function handler when `NODE_ENV=production`; locally it starts an HTTP listener on `process.env.PORT`.
+
+### Project Structure
+
+```
+Music-Web/
+├── config/
+│   ├── database.ts            # MongoDB connection (Mongoose)
+│   └── system.ts              # Shared config (admin URL prefix)
+├── controllers/
+│   ├── admin/                 # Auth, dashboard, my-account, topics, songs,
+│   │                          # singers, roles, accounts, users, settings, upload
+│   └── client/                # Topics, songs, search
+├── helpers/
+│   ├── generate.helper.ts     # Random string generator (auth tokens)
+│   ├── hashPassword.helper.ts # Password hashing
+│   ├── storage.helper.ts      # Multer memory storage
+│   └── uploadToCloudiary.helper.ts # Stream buffer upload to Cloudinary
+├── middlewares/
+│   └── admin/
+│       ├── auth.middleware.ts        # requireAuth, checkPermission, notPermission (403 page)
+│       └── uploadCloud.middleware.ts # Buffer-to-Cloudinary upload middleware
+├── models/                    # Mongoose schemas: Song, Topic, Singer, Role,
+│                              # Account, User, FavoriteSong, Setting
+├── routes/
+│   ├── client/                # Public routes
+│   └── admin/                 # Protected admin routes
+├── views/
+│   ├── client/                # Client-facing Pug templates
+│   └── admin/                 # Admin templates (layouts, partials, mixins,
+│                              # auth pages, error pages, module pages)
+├── public/                    # Static assets served at /
+├── dist/                      # Compiled JavaScript output (deployed to Vercel)
+├── index.ts                   # Application entry point
+├── vercel.json                # Vercel build/route configuration
+└── tsconfig.json              # TypeScript configuration
+```
+
+### Data Model
+
+| Model | Collection | Purpose |
 |---|---|---|
-| `Song` | `songs` | Bài hát: title, avatar, description, singerId, topicId, like, lyrics, audio, slug, listen, status... |
-| `Topic` | `topics` | Chủ đề nhạc: title, avatar, description, slug... |
-| `Singer` | `singers` | Ca sĩ: fullName, avatar, slug... |
-| `Role` | `roles` | Vai trò & quyền hạn |
-| `FavoriteSong` | `favorite-songs` | Bài hát yêu thích của người dùng |
+| Song | songs | title, avatar, description, singerId, topicId, like, listen, lyrics, audio, slug, status, deleted |
+| Topic | topics | title, avatar, description, slug, status, deleted |
+| Singer | singers | fullName, avatar, slug, status, deleted |
+| Role | roles | title, description, permissions (array of permission keys), deleted |
+| Account | accounts | admin users: fullName, email, password, token, phone, avatar, roleId, status, audit fields |
+| User | users | client users: fullName, email, password, phone, avatar, status |
+| FavoriteSong | favorite-songs | userId and songId pairs for favorites |
+| Setting | settings | single document holding general site settings |
 
----
+## Getting Started
 
-## 📦 Cài đặt & Chạy dự án local
+### Prerequisites
+- Node.js 18 or later (LTS recommended)
+- npm
+- A free MongoDB Atlas account
+- A free Cloudinary account
 
-### Yêu cầu
-- **Node.js** >= 18 (khuyến nghị bản LTS)
-- **npm**
-- Tài khoản **MongoDB Atlas** (miễn phí) và tài khoản **Cloudinary** (miễn phí)
-
-### 1. Clone dự án
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/nguyendangcuong201004/Music-Web.git
 cd Music-Web
 ```
 
-### 2. Cài đặt dependencies
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Setup MongoDB Atlas (database)
+### 3. Set up MongoDB Atlas
 
-1. Truy cập [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas) → đăng ký tài khoản miễn phí.
-2. Tạo một **Cluster** (chọn gói M0 Free).
-3. Trong cluster, vào **Database Access** → tạo user (username + password), chọn role **Read and write to any database**.
-4. Vào **Network Access** → **Add IP Address** → chọn `0.0.0.0/0` (Allow access from anywhere) để tiện chạy local và deploy lên Vercel.
-5. Vào **Database** → **Connect** → chọn **Drivers** (Node.js) → copy **connection string**, dạng:
-   ```
-   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
-   ```
-6. Sửa connection string: thay `<password>` bằng mật khẩu thật, và **thêm tên database** vào sau `.mongodb.net/`, ví dụ `music-web`:
-   ```
-   mongodb+srv://cuong:matkhau@cluster0.xxxxx.mongodb.net/music-web?retryWrites=true&w=majority
-   ```
-   > Database và các collection (`songs`, `topics`, `singers`...) sẽ tự động được tạo khi bạn lưu dữ liệu đầu tiên thông qua ứng dụng (Mongoose).
+1. Create a free account at https://www.mongodb.com/cloud/atlas and create an M0 (free tier) cluster.
+2. Under Database Access, create a database user with read/write privileges.
+3. Under Network Access, allow connections from anywhere (`0.0.0.0/0`) for local development and Vercel.
+4. From the Database Connect dialog, choose Drivers (Node.js) and copy the connection string.
+5. Replace `<password>` with your real password and append a database name after `.mongodb.net/`, for example:
 
-### 4. Setup Cloudinary (lưu trữ ảnh & file nhạc)
+```
+mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/music-web?retryWrites=true&w=majority
+```
 
-1. Truy cập [cloudinary.com](https://cloudinary.com/) → đăng ký tài khoản miễn phí.
-2. Sau khi đăng nhập, vào **Dashboard** (Home) → mục **API Keys** (hoặc Settings → Access Keys).
-3. Lấy lại 3 giá trị cần thiết:
-   - `Cloud Name`
-   - `API Key`
-   - `API Secret`
-4. Dán các giá trị này vào file `.env` ở bước tiếp theo. Ảnh avatar/thumbnail và file audio khi tạo chủ đề/bài hát trong admin sẽ được upload thẳng lên Cloudinary (dùng `resource_type: "auto"` nên hỗ trợ cả audio).
+Collections are created automatically by Mongoose when the first documents are saved.
 
-### 5. Tạo file `.env`
+### 4. Set up Cloudinary
 
-Tạo file `.env` tại thư mục gốc của dự án với nội dung:
+1. Create a free account at https://cloudinary.com.
+2. Open the Dashboard and locate the API Keys section.
+3. Copy the `Cloud Name`, `API Key` and `API Secret`. These are required for image and audio uploads from the admin panel (and TinyMCE image uploads).
+
+### 5. Create the environment file
+
+Create a `.env` file in the project root:
 
 ```env
 PORT=3000
+NODE_ENV=development
 MONGO_URL=mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/music-web?retryWrites=true&w=majority
-CLOUD_NAME=<cloud_name_cua_ban>
-CLOUD_KEY=<api_key_cua_ban>
-CLOUD_SECRET=<api_secret_cua_ban>
+CLOUD_NAME=your_cloud_name
+CLOUD_KEY=your_api_key
+CLOUD_SECRET=your_api_secret
 ```
 
-### 6. Build & chạy
+Required environment variables:
+
+| Variable | Description |
+|---|---|
+| PORT | Port for the local development server |
+| NODE_ENV | Set to `production` on Vercel so the app is exported as a Serverless Function instead of listening on a port |
+| MONGO_URL | MongoDB Atlas connection string |
+| CLOUD_NAME | Cloudinary cloud name |
+| CLOUD_KEY | Cloudinary API key |
+| CLOUD_SECRET | Cloudinary API secret |
+
+### 6. Build and run
 
 ```bash
-# Biên dịch TypeScript sang JavaScript (xuất ra thư mục dist/)
+# Compile TypeScript to dist/
 npx tsc
 
-# Chạy môi trường dev (nodemon + ts-node, tự restart khi sửa code)
+# Start the development server (nodemon + ts-node)
 npm start
 ```
 
-Mở trình duyệt truy cập:
+Then open http://localhost:3000.
 
-| Trang | Đường dẫn |
+Main URLs:
+
+| Page | Path |
 |---|---|
-| Danh sách chủ đề | `http://localhost:3000/topics` |
-| Danh sách bài hát theo chủ đề | `http://localhost:3000/songs/:slugChuDe` |
-| Chi tiết bài hát | `http://localhost:3000/songs/detail/:slugBaiHat` |
-| Playlist | `http://localhost:3000/songs/playlist` |
-| Tìm kiếm | `http://localhost:3000/search/result?keyword=tuKhoa` |
-| **Trang admin** | `http://localhost:3000/admin/dashboard` |
-| Admin - Chủ đề | `http://localhost:3000/admin/topics` |
-| Admin - Bài hát | `http://localhost:3000/admin/songs` |
-| Admin - Vai trò | `http://localhost:3000/admin/roles` |
+| Topics | `/topics` |
+| Songs by topic | `/songs/:topicSlug` |
+| Song detail | `/songs/detail/:songSlug` |
+| Playlist | `/songs/playlist` |
+| Search results | `/search/result?keyword=...` |
+| Search suggestions (JSON) | `/search/suggest?keyword=...` |
+| Admin login | `/admin/auth/login` |
+| Admin register | `/admin/auth/register` |
+| Admin dashboard | `/admin/dashboard` |
 
-> 💡 Thứ tự thao tác gợi ý khi chạy lần đầu: insert ca sĩ vào collection `singers` (do chưa có UI) → vào `/admin/topics` tạo chủ đề → vào `/admin/songs` tạo bài hát → ra client nghe thử.
+First run workflow:
+1. Register the first admin account at `/admin/auth/register`.
+2. Optionally create roles at `/admin/roles/create` and assign permissions at `/admin/roles/permissions`.
+3. Create singers under `/admin/singers`, topics under `/admin/topics`, then songs under `/admin/songs`.
 
----
+## Deployment on Vercel
 
-## 🚀 Deploy lên Vercel
+The app runs as a Vercel Serverless Function defined in `vercel.json`, which points all traffic at `dist/index.js`. Because of this, compiled output must be committed together with its runtime assets.
 
-Dự án deploy dưới dạng **Vercel Serverless Function** (file `vercel.json` trỏ tới `dist/index.js`). Vì vậy **bắt buộc phải build (`npx tsc`) và commit cả thư mục `dist/`** lên GitHub mỗi khi sửa code TypeScript.
+1. Build and sync assets before committing:
 
-### Các bước
-
-1. Push code (bao gồm thư mục `dist/`) lên GitHub.
-2. Truy cập [vercel.com](https://vercel.com/) → **Add New Project** → import repository GitHub của bạn (giữ nguyên các thiết lập mặc định, Vercel sẽ đọc `vercel.json`).
-3. ⚠️ **Quan trọng:** vào **Project → Settings → Environment Variables**, thêm các biến sau (vì file `.env` không được commit lên git):
-
-   | Key | Value |
-   |---|---|
-   | `NODE_ENV` | `production` |
-   | `MONGO_URL` | Connection string MongoDB Atlas của bạn |
-   | `CLOUD_NAME` | Cloud Name trên Cloudinary |
-   | `CLOUD_KEY` | API Key trên Cloudinary |
-   | `CLOUD_SECRET` | API Secret trên Cloudinary |
-
-   > `NODE_ENV=production` là bắt buộc: khi biến này được set, server sẽ export app làm Serverless Function thay vì chạy `app.listen()` (chỉ dùng cho local). Thiếu biến này hoặc thiếu `MONGO_URL` sẽ gây lỗi **500 FUNCTION_INVOCATION_FAILED**.
-4. Nhấn **Deploy** và chờ hoàn tất.
-5. Mỗi lần cập nhật code: chạy `npx tsc` → commit (nhớ gồm cả `dist/`) → push → Vercel tự động redeploy.
-
----
-
-## 📂 Cấu trúc thư mục
-
-```
-Music-Web/
-├── config/
-│   ├── database.ts        # Kết nối MongoDB (Mongoose)
-│   └── system.ts          # Cấu hình chung (tiền tố admin)
-├── controllers/
-│   ├── admin/             # Controller trang quản trị (dashboard, topics, songs, roles, upload)
-│   └── client/            # Controller người dùng (topics, songs, search)
-├── helpers/
-│   ├── storage.helper.ts  # Bộ nhớ đệm (memoryStorage) cho multer
-│   └── uploadToCloudiary.helper.ts # Upload buffer lên Cloudinary qua stream
-├── middlewares/
-│   └── admin/uploadCloud.middleware.ts # Middleware upload file lên Cloudinary
-├── models/
-│   ├── song.model.ts      # Model bài hát
-│   ├── topic.model.ts     # Model chủ đề
-│   ├── singer.mode.ts     # Model ca sĩ
-│   ├── role.model.ts      # Model vai trò
-│   └── favorite-song.model.ts # Model bài hát yêu thích
-├── routes/
-│   ├── client/            # Route client: /topics, /songs, /search
-│   └── admin/             # Route admin: /admin/dashboard|topics|roles|songs|upload
-├── views/
-│   ├── client/            # Giao diện pug phía người dùng
-│   └── admin/             # Giao diện pug phía quản trị
-├── public/                # Static assets (css, js, images)
-├── dist/                  # Code đã biên dịch (deploy lên Vercel)
-├── index.ts               # Điểm khởi tạo app Express
-├── vercel.json            # Cấu hình deploy Vercel
-└── tsconfig.json          # Cấu hình TypeScript
+```bash
+npx tsc && cp -r views public dist/
 ```
 
----
+2. Commit and push the code, including the `dist/` directory.
+3. In Vercel, import the GitHub repository (default settings; `vercel.json` handles the rest).
+4. Configure Environment Variables in Project Settings:
 
-## 👨‍💻 Tác giả
+| Variable | Value |
+|---|---|
+| NODE_ENV | production |
+| MONGO_URL | Your MongoDB Atlas connection string |
+| CLOUD_NAME | Your Cloudinary cloud name |
+| CLOUD_KEY | Your Cloudinary API key |
+| CLOUD_SECRET | Your Cloudinary API secret |
 
-- **Nguyễn Đặng Cường** — [GitHub](https://github.com/nguyendangcuong201004)
+5. Deploy.
 
----
-
-## 📄 License
-
-Dự án được phát hành theo giấy phép [ISC](https://opensource.org/licenses/ISC).
+Note: `NODE_ENV=production` is required. When it is set, the entry point exports the Express app for the Serverless runtime instead of calling `app.listen()`. Missing this variable (or `MONGO_URL`) causes `FUNCTION_INVOCATION_FAILED` errors on Vercel.
