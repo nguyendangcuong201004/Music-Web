@@ -46,36 +46,26 @@ var system_1 = require("../../config/system");
 var hashPassword_helper_1 = require("../../helpers/hashPassword.helper");
 var auth_middleware_1 = require("../../middlewares/admin/auth.middleware");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var accounts, _i, accounts_1, account, role;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, accounts, roles, roleMap, _i, accounts_1, account;
+    var _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 if (!(0, auth_middleware_1.checkPermission)(res, "accounts_view")) {
                     (0, auth_middleware_1.notPermission)(res);
                     return [2 /*return*/];
                 }
-                return [4 /*yield*/, account_model_1.default.find({
-                        deleted: false,
-                    })];
+                return [4 /*yield*/, Promise.all([
+                        account_model_1.default.find({ deleted: false }),
+                        role_model_1.default.find({ deleted: false }),
+                    ])];
             case 1:
-                accounts = _a.sent();
-                _i = 0, accounts_1 = accounts;
-                _a.label = 2;
-            case 2:
-                if (!(_i < accounts_1.length)) return [3 /*break*/, 5];
-                account = accounts_1[_i];
-                return [4 /*yield*/, role_model_1.default.findOne({
-                        _id: account.roleId,
-                        deleted: false,
-                    })];
-            case 3:
-                role = _a.sent();
-                account["role"] = role ? role.title : "";
-                _a.label = 4;
-            case 4:
-                _i++;
-                return [3 /*break*/, 2];
-            case 5:
+                _a = _c.sent(), accounts = _a[0], roles = _a[1];
+                roleMap = new Map(roles.map(function (role) { return [role.id, role]; }));
+                for (_i = 0, accounts_1 = accounts; _i < accounts_1.length; _i++) {
+                    account = accounts_1[_i];
+                    account["role"] = ((_b = roleMap.get(account.roleId)) === null || _b === void 0 ? void 0 : _b.title) || "";
+                }
                 res.render("admin/pages/accounts/index.pug", {
                     pageTitle: "Tài khoản admin",
                     accounts: accounts

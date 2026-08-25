@@ -45,36 +45,29 @@ var song_model_1 = __importDefault(require("../../models/song.model"));
 var system_1 = require("../../config/system");
 var auth_middleware_1 = require("../../middlewares/admin/auth.middleware");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var singers, _i, singers_1, singer, countSong;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, singers, songs, songCountMap, _i, songs_1, song, _b, singers_1, singer;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 if (!(0, auth_middleware_1.checkPermission)(res, "singers_view")) {
                     (0, auth_middleware_1.notPermission)(res);
                     return [2 /*return*/];
                 }
-                return [4 /*yield*/, singer_mode_1.default.find({
-                        deleted: false,
-                    })];
+                return [4 /*yield*/, Promise.all([
+                        singer_mode_1.default.find({ deleted: false }),
+                        song_model_1.default.find({ deleted: false }, "singerId"),
+                    ])];
             case 1:
-                singers = _a.sent();
-                _i = 0, singers_1 = singers;
-                _a.label = 2;
-            case 2:
-                if (!(_i < singers_1.length)) return [3 /*break*/, 5];
-                singer = singers_1[_i];
-                return [4 /*yield*/, song_model_1.default.countDocuments({
-                        singerId: singer.id,
-                        deleted: false,
-                    })];
-            case 3:
-                countSong = _a.sent();
-                singer["countSong"] = countSong;
-                _a.label = 4;
-            case 4:
-                _i++;
-                return [3 /*break*/, 2];
-            case 5:
+                _a = _c.sent(), singers = _a[0], songs = _a[1];
+                songCountMap = new Map();
+                for (_i = 0, songs_1 = songs; _i < songs_1.length; _i++) {
+                    song = songs_1[_i];
+                    songCountMap.set(song.singerId, (songCountMap.get(song.singerId) || 0) + 1);
+                }
+                for (_b = 0, singers_1 = singers; _b < singers_1.length; _b++) {
+                    singer = singers_1[_b];
+                    singer["countSong"] = songCountMap.get(singer.id) || 0;
+                }
                 res.render("admin/pages/singers/index.pug", {
                     pageTitle: "Quản lý ca sĩ",
                     singers: singers

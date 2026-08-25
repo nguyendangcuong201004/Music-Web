@@ -44,7 +44,7 @@ var song_model_1 = __importDefault(require("../../models/song.model"));
 var singer_mode_1 = __importDefault(require("../../models/singer.mode"));
 var unidecode_1 = __importDefault(require("unidecode"));
 var result = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var type, keyword, unidecodeText, slug, slugRegex, keywordRegex, songsDetail, songs, _i, songs_1, song, singer;
+    var type, keyword, unidecodeText, slug, slugRegex, keywordRegex, songsDetail, songs, allSingers, singerMap, _i, songs_1, song, singer;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -55,7 +55,7 @@ var result = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 slugRegex = new RegExp(slug, "i");
                 keywordRegex = new RegExp(keyword, "i");
                 songsDetail = [];
-                if (!keyword) return [3 /*break*/, 6];
+                if (!keyword) return [3 /*break*/, 3];
                 return [4 /*yield*/, song_model_1.default.find({
                         $or: [
                             { title: keywordRegex },
@@ -63,36 +63,30 @@ var result = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                         ],
                         deleted: false,
                         status: "active"
-                    })];
+                    })
+                    // Tối ưu N+1: lấy hết ca sĩ trong 1 query rồi tra bằng Map
+                ];
             case 1:
                 songs = _a.sent();
-                _i = 0, songs_1 = songs;
-                _a.label = 2;
+                return [4 /*yield*/, singer_mode_1.default.find({ deleted: false })];
             case 2:
-                if (!(_i < songs_1.length)) return [3 /*break*/, 5];
-                song = songs_1[_i];
-                return [4 /*yield*/, singer_mode_1.default.findOne({
-                        _id: song.singerId,
-                        deleted: false,
-                    })];
-            case 3:
-                singer = _a.sent();
-                song["singer"] = singer;
-                songsDetail.push({
-                    id: song.id,
-                    avatar: song.avatar,
-                    title: song.title,
-                    slug: song.slug,
-                    audio: song.audio,
-                    singer: singer,
-                    like: song.like,
-                    lyrics: song.lyrics,
-                });
-                _a.label = 4;
-            case 4:
-                _i++;
-                return [3 /*break*/, 2];
-            case 5:
+                allSingers = _a.sent();
+                singerMap = new Map(allSingers.map(function (singer) { return [singer.id, singer]; }));
+                for (_i = 0, songs_1 = songs; _i < songs_1.length; _i++) {
+                    song = songs_1[_i];
+                    singer = singerMap.get(song.singerId) || null;
+                    song["singer"] = singer;
+                    songsDetail.push({
+                        id: song.id,
+                        avatar: song.avatar,
+                        title: song.title,
+                        slug: song.slug,
+                        audio: song.audio,
+                        singer: singer,
+                        like: song.like,
+                        lyrics: song.lyrics,
+                    });
+                }
                 if (type == "result") {
                     res.render("client/pages/search/result", {
                         pageTitle: "K\u1EBFt qu\u1EA3 t\u00ECm ki\u1EBFm cho ".concat(keyword),
@@ -107,11 +101,11 @@ var result = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                         testcase: keyword,
                     });
                 }
-                return [3 /*break*/, 7];
-            case 6:
+                return [3 /*break*/, 4];
+            case 3:
                 res.redirect("/topics");
-                _a.label = 7;
-            case 7: return [2 /*return*/];
+                _a.label = 4;
+            case 4: return [2 /*return*/];
         }
     });
 }); };

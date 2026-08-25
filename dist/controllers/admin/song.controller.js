@@ -46,43 +46,29 @@ var topic_model_1 = __importDefault(require("../../models/topic.model"));
 var system_1 = require("../../config/system");
 var auth_middleware_1 = require("../../middlewares/admin/auth.middleware");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var songs, _i, songs_1, song, singer, topic;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, songs, singers, topics, singerMap, topicMap, _i, songs_1, song;
+    var _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 if (!(0, auth_middleware_1.checkPermission)(res, "songs_view")) {
                     (0, auth_middleware_1.notPermission)(res);
                     return [2 /*return*/];
                 }
-                return [4 /*yield*/, song_model_1.default.find({
-                        deleted: false,
-                    })];
+                return [4 /*yield*/, Promise.all([
+                        song_model_1.default.find({ deleted: false }),
+                        singer_mode_1.default.find({ deleted: false }),
+                        topic_model_1.default.find({ deleted: false }),
+                    ])];
             case 1:
-                songs = _a.sent();
-                _i = 0, songs_1 = songs;
-                _a.label = 2;
-            case 2:
-                if (!(_i < songs_1.length)) return [3 /*break*/, 6];
-                song = songs_1[_i];
-                return [4 /*yield*/, singer_mode_1.default.findOne({
-                        _id: song.singerId,
-                        deleted: false,
-                    })];
-            case 3:
-                singer = _a.sent();
-                return [4 /*yield*/, topic_model_1.default.findOne({
-                        _id: song.topicId,
-                        deleted: false
-                    })];
-            case 4:
-                topic = _a.sent();
-                song["topic"] = topic.title;
-                song["singer"] = singer.fullName;
-                _a.label = 5;
-            case 5:
-                _i++;
-                return [3 /*break*/, 2];
-            case 6:
+                _a = _d.sent(), songs = _a[0], singers = _a[1], topics = _a[2];
+                singerMap = new Map(singers.map(function (singer) { return [singer.id, singer]; }));
+                topicMap = new Map(topics.map(function (topic) { return [topic.id, topic]; }));
+                for (_i = 0, songs_1 = songs; _i < songs_1.length; _i++) {
+                    song = songs_1[_i];
+                    song["singer"] = ((_b = singerMap.get(song.singerId)) === null || _b === void 0 ? void 0 : _b.fullName) || "";
+                    song["topic"] = ((_c = topicMap.get(song.topicId)) === null || _c === void 0 ? void 0 : _c.title) || "";
+                }
                 res.render("admin/pages/songs/index.pug", {
                     pageTitle: "Spotify's Songs",
                     songs: songs

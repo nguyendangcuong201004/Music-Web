@@ -13,21 +13,19 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    const songs = await Song.find({
-        deleted: false,
-    })
+    // Tối ưu N+1: chỉ 3 query chạy song song, tra cứu bằng Map thay vì query từng bản ghi
+    const [songs, singers, topics] = await Promise.all([
+        Song.find({ deleted: false }),
+        Singer.find({ deleted: false }),
+        Topic.find({ deleted: false }),
+    ])
+
+    const singerMap = new Map(singers.map(singer => [singer.id, singer]))
+    const topicMap = new Map(topics.map(topic => [topic.id, topic]))
 
     for (const song of songs) {
-        const singer = await Singer.findOne({
-            _id: song.singerId,
-            deleted: false,
-        })
-        const topic = await Topic.findOne({
-            _id: song.topicId,
-            deleted: false
-        })
-        song["topic"] = topic.title;
-        song["singer"] = singer.fullName;
+        song["singer"] = singerMap.get(song.singerId)?.fullName || "";
+        song["topic"] = topicMap.get(song.topicId)?.title || "";
     }
 
     res.render("admin/pages/songs/index.pug", {

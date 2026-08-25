@@ -11,21 +11,21 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    const records = await Role.find({
-        deleted: false,
-    })
+    // Tối ưu N+1: 2 query song song, đếm tài khoản và tra người tạo bằng Map
+    const [records, accounts] = await Promise.all([
+        Role.find({ deleted: false }),
+        Account.find({ deleted: false }),
+    ])
+
+    const accountCountMap = new Map<string, number>()
+    for (const account of accounts) {
+        accountCountMap.set(account.roleId, (accountCountMap.get(account.roleId) || 0) + 1)
+    }
+    const creatorMap = new Map(accounts.map(account => [account.id, account]))
 
     for (const record of records) {
-        const countAccount = await Account.countDocuments({
-            roleId: record.id,
-            deleted: false,
-        })
-        record["countAccount"] = countAccount;
-        const creator = await Account.findOne({
-            _id: record.createdBy,
-            deleted: false
-        })
-        record["creator"] = creator ? creator.fullName : "";
+        record["countAccount"] = accountCountMap.get(record.id) || 0;
+        record["creator"] = creatorMap.get(record.createdBy)?.fullName || "";
     }
 
     res.render("admin/pages/roles/index.pug", {

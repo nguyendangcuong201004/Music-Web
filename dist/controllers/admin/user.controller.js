@@ -45,31 +45,24 @@ var favorite_song_model_1 = __importDefault(require("../../models/favorite-song.
 var system_1 = require("../../config/system");
 var hashPassword_helper_1 = require("../../helpers/hashPassword.helper");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var users, _i, users_1, user, countFavorite;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, user_model_1.default.find({
-                    deleted: false,
-                })];
+    var _a, users, favorites, favoriteCountMap, _i, favorites_1, favorite, _b, users_1, user;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0: return [4 /*yield*/, Promise.all([
+                    user_model_1.default.find({ deleted: false }),
+                    favorite_song_model_1.default.find({ deleted: false }, "userId"),
+                ])];
             case 1:
-                users = _a.sent();
-                _i = 0, users_1 = users;
-                _a.label = 2;
-            case 2:
-                if (!(_i < users_1.length)) return [3 /*break*/, 5];
-                user = users_1[_i];
-                return [4 /*yield*/, favorite_song_model_1.default.countDocuments({
-                        userId: user.id,
-                        deleted: false,
-                    })];
-            case 3:
-                countFavorite = _a.sent();
-                user["countFavorite"] = countFavorite;
-                _a.label = 4;
-            case 4:
-                _i++;
-                return [3 /*break*/, 2];
-            case 5:
+                _a = _c.sent(), users = _a[0], favorites = _a[1];
+                favoriteCountMap = new Map();
+                for (_i = 0, favorites_1 = favorites; _i < favorites_1.length; _i++) {
+                    favorite = favorites_1[_i];
+                    favoriteCountMap.set(favorite.userId, (favoriteCountMap.get(favorite.userId) || 0) + 1);
+                }
+                for (_b = 0, users_1 = users; _b < users_1.length; _b++) {
+                    user = users_1[_b];
+                    user["countFavorite"] = favoriteCountMap.get(user.id) || 0;
+                }
                 res.render("admin/pages/users/index.pug", {
                     pageTitle: "Tài khoản user",
                     users: users

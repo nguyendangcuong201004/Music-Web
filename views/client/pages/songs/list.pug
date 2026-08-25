@@ -16,6 +16,6 @@ block main
                         div(class="inner-content")
                             div(class="inner-title")
                                 a(href=`/songs/detail/${song.slug}`) #{song.title}
-                            div(class="inner-singer")  #{song.singer}
+                            div(class="inner-singer")  #{song.singer ? song.singer.fullName : ""}
                             div(class="inner-like" list-like=song.id) <i class="fa-solid fa-heart"></i> <span> #{song.like}
                             div(class="inner-time") <i class="fa-regular fa-clock"></i> Hôm nay

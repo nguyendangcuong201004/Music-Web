@@ -12,16 +12,16 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    const accounts = await Account.find({
-        deleted: false,
-    })
+    // Tối ưu N+1: 2 query song song, tra cứu vai trò bằng Map
+    const [accounts, roles] = await Promise.all([
+        Account.find({ deleted: false }),
+        Role.find({ deleted: false }),
+    ])
+
+    const roleMap = new Map(roles.map(role => [role.id, role]))
 
     for (const account of accounts) {
-        const role = await Role.findOne({
-            _id: account.roleId,
-            deleted: false,
-        })
-        account["role"] = role ? role.title : "";
+        account["role"] = roleMap.get(account.roleId)?.title || "";
     }
 
     res.render("admin/pages/accounts/index.pug", {

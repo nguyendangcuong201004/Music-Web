@@ -19,12 +19,12 @@ export const list = async (req: Request, res: Response): Promise<void> => {
         deleted: false,
     })
 
+    // Tối ưu N+1: lấy hết ca sĩ trong 1 query rồi tra bằng Map
+    const singers = await Singer.find({ deleted: false })
+    const singerMap = new Map(singers.map(singer => [singer.id, singer]))
+
     for (const song of songs) {
-        const singer = await Singer.findOne({
-            _id: song.singerId,
-            deleted: false,
-        })
-        song["singer"] = singer.fullName;
+        song["singer"] = singerMap.get(song.singerId) || null;
     }
 
     res.render("client/pages/songs/list.pug", {

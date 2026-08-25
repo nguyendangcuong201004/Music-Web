@@ -28,11 +28,12 @@ export const result = async (req: Request, res: Response): Promise<void> => {
             status: "active"
         })
     
+        // Tối ưu N+1: lấy hết ca sĩ trong 1 query rồi tra bằng Map
+        const allSingers = await Singer.find({ deleted: false })
+        const singerMap = new Map(allSingers.map(singer => [singer.id, singer]))
+
         for (const song of songs) {
-            const singer = await Singer.findOne({
-                _id: song.singerId,
-                deleted: false,
-            })
+            const singer = singerMap.get(song.singerId) || null;
             song["singer"] = singer;
             songsDetail.push({
                 id: song.id,

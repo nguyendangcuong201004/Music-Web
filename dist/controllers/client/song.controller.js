@@ -45,7 +45,7 @@ var song_model_1 = __importDefault(require("../../models/song.model"));
 var singer_mode_1 = __importDefault(require("../../models/singer.mode"));
 var favorite_song_model_1 = __importDefault(require("../../models/favorite-song.model"));
 var list = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var slug, topic, songs, _i, songs_1, song, singer;
+    var slug, topic, songs, singers, singerMap, _i, songs_1, song;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -59,26 +59,19 @@ var list = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, song_model_1.default.find({
                         topicId: topic.id,
                         deleted: false,
-                    })];
+                    })
+                    // Tối ưu N+1: lấy hết ca sĩ trong 1 query rồi tra bằng Map
+                ];
             case 2:
                 songs = _a.sent();
-                _i = 0, songs_1 = songs;
-                _a.label = 3;
+                return [4 /*yield*/, singer_mode_1.default.find({ deleted: false })];
             case 3:
-                if (!(_i < songs_1.length)) return [3 /*break*/, 6];
-                song = songs_1[_i];
-                return [4 /*yield*/, singer_mode_1.default.findOne({
-                        _id: song.singerId,
-                        deleted: false,
-                    })];
-            case 4:
-                singer = _a.sent();
-                song["singer"] = singer.fullName;
-                _a.label = 5;
-            case 5:
-                _i++;
-                return [3 /*break*/, 3];
-            case 6:
+                singers = _a.sent();
+                singerMap = new Map(singers.map(function (singer) { return [singer.id, singer]; }));
+                for (_i = 0, songs_1 = songs; _i < songs_1.length; _i++) {
+                    song = songs_1[_i];
+                    song["singer"] = singerMap.get(song.singerId) || null;
+                }
                 res.render("client/pages/songs/list.pug", {
                     pageTitle: "Nh\u1EA1c ".concat(topic.title),
                     topic: topic,

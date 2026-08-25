@@ -6,16 +6,19 @@ import { hashPassword } from "../../helpers/hashPassword.helper"
 
 export const index = async (req: Request, res: Response): Promise<void> => {
 
-    const users = await User.find({
-        deleted: false,
-    })
+    // Tối ưu N+1: 2 query song song, đếm lượt yêu thích bằng Map
+    const [users, favorites] = await Promise.all([
+        User.find({ deleted: false }),
+        FavoriteSong.find({ deleted: false }, "userId"),
+    ])
+
+    const favoriteCountMap = new Map<string, number>()
+    for (const favorite of favorites) {
+        favoriteCountMap.set(favorite.userId, (favoriteCountMap.get(favorite.userId) || 0) + 1)
+    }
 
     for (const user of users) {
-        const countFavorite = await FavoriteSong.countDocuments({
-            userId: user.id,
-            deleted: false,
-        })
-        user["countFavorite"] = countFavorite;
+        user["countFavorite"] = favoriteCountMap.get(user.id) || 0;
     }
 
     res.render("admin/pages/users/index.pug", {

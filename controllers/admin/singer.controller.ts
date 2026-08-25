@@ -11,16 +11,19 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    const singers = await Singer.find({
-        deleted: false,
-    })
+    // Tối ưu N+1: 2 query song song, đếm số bài hát bằng Map
+    const [singers, songs] = await Promise.all([
+        Singer.find({ deleted: false }),
+        Song.find({ deleted: false }, "singerId"),
+    ])
+
+    const songCountMap = new Map<string, number>()
+    for (const song of songs) {
+        songCountMap.set(song.singerId, (songCountMap.get(song.singerId) || 0) + 1)
+    }
 
     for (const singer of singers) {
-        const countSong = await Song.countDocuments({
-            singerId: singer.id,
-            deleted: false,
-        })
-        singer["countSong"] = countSong;
+        singer["countSong"] = songCountMap.get(singer.id) || 0;
     }
 
     res.render("admin/pages/singers/index.pug", {

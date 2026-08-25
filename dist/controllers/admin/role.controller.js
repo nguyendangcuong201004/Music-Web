@@ -45,43 +45,32 @@ var account_model_1 = __importDefault(require("../../models/account.model"));
 var system_1 = require("../../config/system");
 var auth_middleware_1 = require("../../middlewares/admin/auth.middleware");
 var index = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var records, _i, records_1, record, countAccount, creator;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a, records, accounts, accountCountMap, _i, accounts_1, account, creatorMap, _b, records_1, record;
+    var _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 if (!(0, auth_middleware_1.checkPermission)(res, "roles_view")) {
                     (0, auth_middleware_1.notPermission)(res);
                     return [2 /*return*/];
                 }
-                return [4 /*yield*/, role_model_1.default.find({
-                        deleted: false,
-                    })];
+                return [4 /*yield*/, Promise.all([
+                        role_model_1.default.find({ deleted: false }),
+                        account_model_1.default.find({ deleted: false }),
+                    ])];
             case 1:
-                records = _a.sent();
-                _i = 0, records_1 = records;
-                _a.label = 2;
-            case 2:
-                if (!(_i < records_1.length)) return [3 /*break*/, 6];
-                record = records_1[_i];
-                return [4 /*yield*/, account_model_1.default.countDocuments({
-                        roleId: record.id,
-                        deleted: false,
-                    })];
-            case 3:
-                countAccount = _a.sent();
-                record["countAccount"] = countAccount;
-                return [4 /*yield*/, account_model_1.default.findOne({
-                        _id: record.createdBy,
-                        deleted: false
-                    })];
-            case 4:
-                creator = _a.sent();
-                record["creator"] = creator ? creator.fullName : "";
-                _a.label = 5;
-            case 5:
-                _i++;
-                return [3 /*break*/, 2];
-            case 6:
+                _a = _d.sent(), records = _a[0], accounts = _a[1];
+                accountCountMap = new Map();
+                for (_i = 0, accounts_1 = accounts; _i < accounts_1.length; _i++) {
+                    account = accounts_1[_i];
+                    accountCountMap.set(account.roleId, (accountCountMap.get(account.roleId) || 0) + 1);
+                }
+                creatorMap = new Map(accounts.map(function (account) { return [account.id, account]; }));
+                for (_b = 0, records_1 = records; _b < records_1.length; _b++) {
+                    record = records_1[_b];
+                    record["countAccount"] = accountCountMap.get(record.id) || 0;
+                    record["creator"] = ((_c = creatorMap.get(record.createdBy)) === null || _c === void 0 ? void 0 : _c.fullName) || "";
+                }
                 res.render("admin/pages/roles/index.pug", {
                     pageTitle: "Nh\u00F3m quy\u1EC1n",
                     records: records
