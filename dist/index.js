@@ -18,7 +18,7 @@ var express_flash_1 = __importDefault(require("express-flash"));
 var cookie_parser_1 = __importDefault(require("cookie-parser"));
 var express_session_1 = __importDefault(require("express-session"));
 var app = (0, express_1.default)();
-var port = "".concat(process.env.PORT) || 3000;
+var port = process.env.PORT || 3000;
 app.set('views', "".concat(__dirname, "/views"));
 app.set('view engine', 'pug');
 app.use((0, cookie_parser_1.default)('NDCNDTN'));
@@ -31,6 +31,9 @@ app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.locals.prefixAdmin = system_1.systemConfig.prefixAdmin;
 (0, client_1.default)(app); // Router for client 
 (0, admin_1.default)(app);
-app.listen(port, function () {
-    console.log("Chay tren cong ".concat(port));
-});
+if (process.env.NODE_ENV !== "production") {
+    app.listen(port, function () {
+        console.log("Chay tren cong ".concat(port));
+    });
+}
+exports.default = app;

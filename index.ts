@@ -15,7 +15,7 @@ import cookieParser  from "cookie-parser";
 import session from "express-session"
 
 const app: Express = express();
-const port: (number | string) = `${process.env.PORT}` || 3000;
+const port: (number | string) = process.env.PORT || 3000;
 
 
 
@@ -40,6 +40,10 @@ clientRoutes(app); // Router for client
 adminRoutes(app)
 
 
-app.listen(port, () => {
-    console.log(`Chay tren cong ${port}`)
-})
+if (process.env.NODE_ENV !== "production") {
+    app.listen(port, () => {
+        console.log(`Chay tren cong ${port}`)
+    })
+}
+
+export default app;
